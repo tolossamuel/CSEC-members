@@ -1,4 +1,4 @@
-import 'package:csec/homePage/home.dart';
+import 'package:csec/homePage/Memebers/home.dart';
 import 'package:csec/login_signup/login.dart';
 import 'package:csec/login_signup/registers.dart';
 import 'package:csec/theming/change.dart';
@@ -27,12 +27,12 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Note Book',
-      home: const Login(),
+      home: const HomePage(),
       theme: Provider.of<ThemeProvider>(context).themeData,
-      routes: {
-        "/register": (context) => const Register(),
-        "/home": (context) => const HomePage(),
-      },
+      // routes: {
+      //   "/register": (context) => const Register(),
+      //   "/home": (context) => const HomePage(),
+      // },
     );
   }
 }
