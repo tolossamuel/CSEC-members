@@ -1,4 +1,6 @@
+import 'package:csec/homePage/home.dart';
 import 'package:csec/login_signup/login.dart';
+import 'package:csec/login_signup/registers.dart';
 import 'package:csec/theming/change.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,6 +29,10 @@ class MyApp extends StatelessWidget {
       title: 'Note Book',
       home: const Login(),
       theme: Provider.of<ThemeProvider>(context).themeData,
+      routes: {
+        "/register": (context) => const Register(),
+        "/home": (context) => const HomePage(),
+      },
     );
   }
 }

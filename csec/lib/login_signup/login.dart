@@ -118,20 +118,19 @@ class _LoginState extends State<Login> {
                       ),
                       OutlinedButton(
                         onPressed: () async {
-                          print("ffffffffffhhhhhhh");
                           final email = _email.text;
                           final password = _password.text;
                           try {
                             await FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
                                     email: email, password: password);
-                            print("login");
+
                             final user = FirebaseAuth.instance.currentUser;
+                            // ignore: use_build_context_synchronously
+                            Navigator.pushReplacementNamed(context, '/home');
+
                             if (user?.emailVerified ?? false) {
-                              print("not login");
-                            } else {
-                              print("samuel");
-                            }
+                            } else {}
                           } on FirebaseAuthException catch (e) {
                             if (e.code == "user-not-found") {
                               print("user-not-found");
@@ -184,7 +183,18 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       SizedBox(
-                        height: Dimensions.height5 * 10,
+                        height: Dimensions.height5 * 0.5,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/register");
+                            },
+                            child: NormalText(text: "Create account")),
+                      ),
+                      SizedBox(
+                        height: Dimensions.height5 * 5,
                       ),
                       BigText(
                         text: "OR CONNECT WITH",

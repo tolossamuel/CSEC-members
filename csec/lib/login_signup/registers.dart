@@ -1,6 +1,8 @@
 import 'package:csec/colors_dimensions/colors.dart';
 import 'package:csec/colors_dimensions/dimensions.dart';
 import 'package:csec/firebase_options.dart';
+import 'package:csec/service/database.dart';
+import 'package:csec/text_icons/normal_text.dart';
 import 'package:csec/text_icons/text.dart';
 import 'package:csec/theming/change.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,6 +22,10 @@ class _RegisterState extends State<Register> {
   late final TextEditingController _password;
   late final TextEditingController _name;
   late final TextEditingController _configPassword;
+  String showError = "";
+  bool _isPasswordVisible = false;
+  bool _isPasswordVisibleForNext = false;
+  IconData iconForPassword = Icons.remove_red_eye_outlined;
   final OutlineInputBorder border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(Dimensions.height5 * 8),
       borderSide: const BorderSide(
@@ -62,11 +68,23 @@ class _RegisterState extends State<Register> {
                         Dimensions.height5),
                     child: Column(children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: Dimensions.height5),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: const SizedBox(
+                                child: Icon(Icons.arrow_back_ios),
+                              ),
+                            ),
+                          ),
                           Container(
                               alignment: Alignment.center,
                               height: Dimensions.screenHeight * 0.15,
-                              width: Dimensions.screenWidth * 0.8,
+                              width: Dimensions.screenWidth * 0.6,
                               child: BigText(
                                 text: "CSEC ASTU",
                                 fontSize: 30,
@@ -87,11 +105,24 @@ class _RegisterState extends State<Register> {
                         ],
                       ),
                       SizedBox(
+                        height: Dimensions.height5 * 3,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: NormalText(
+                          text: showError,
+                          colors: Colors.red,
+                          fontSize: 14,
+                        ),
+                      ),
+                      SizedBox(
+                        height: Dimensions.height5 * 3,
+                      ),
+                      SizedBox(
                         width: Dimensions.screenWidth * 0.9,
                         height: Dimensions.screenHeight * 0.07,
                         child: TextField(
                             controller: _name,
-                            keyboardType: TextInputType.emailAddress,
                             autocorrect: false,
                             enableSuggestions: false,
                             decoration: InputDecoration(
@@ -105,8 +136,8 @@ class _RegisterState extends State<Register> {
                         width: Dimensions.screenWidth * 0.9,
                         height: Dimensions.screenHeight * 0.07,
                         child: TextField(
-                            obscureText: true,
                             autocorrect: false,
+                            keyboardType: TextInputType.emailAddress,
                             controller: _email,
                             enableSuggestions: false,
                             decoration: InputDecoration(
@@ -121,10 +152,23 @@ class _RegisterState extends State<Register> {
                         height: Dimensions.screenHeight * 0.07,
                         child: TextField(
                             controller: _password,
-                            keyboardType: TextInputType.emailAddress,
+                            obscureText: !_isPasswordVisible,
                             autocorrect: false,
                             enableSuggestions: false,
                             decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isPasswordVisible = !_isPasswordVisible;
+                                  });
+                                },
+                              ),
                               hintText: "Password",
                               border: border,
                               focusedBorder: border,
@@ -135,11 +179,25 @@ class _RegisterState extends State<Register> {
                         width: Dimensions.screenWidth * 0.9,
                         height: Dimensions.screenHeight * 0.07,
                         child: TextField(
-                            obscureText: true,
+                            obscureText: !_isPasswordVisibleForNext,
                             autocorrect: false,
                             controller: _configPassword,
                             enableSuggestions: false,
                             decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isPasswordVisibleForNext
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isPasswordVisibleForNext =
+                                        !_isPasswordVisibleForNext;
+                                  });
+                                },
+                              ),
                               hintText: "Config password",
                               border: border,
                               focusedBorder: border,
@@ -152,22 +210,55 @@ class _RegisterState extends State<Register> {
                         onPressed: () async {
                           final email = _email.text;
                           final password = _password.text;
-                          try {
-                            await FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                                    email: email, password: password);
-                            print("login");
-                            final user = FirebaseAuth.instance.currentUser;
-                            if (user?.emailVerified ?? false) {
-                              print("not login");
+                          final configPassword = _configPassword.text;
+                          final name = _name.text;
+                          if (_name.text.isNotEmpty &&
+                              _email.text.isNotEmpty &&
+                              _password.text.isNotEmpty) {
+                            if (password == configPassword) {
+                              if (password.length >= 8) {
+                                try {
+                                  print('try');
+                                  await FirebaseAuth.instance
+                                      .createUserWithEmailAndPassword(
+                                          email: email, password: password);
+                                  User? user =
+                                      FirebaseAuth.instance.currentUser;
+                                  if (user != null) {
+                                    // Use the correct parameter name 'fullname' instead of 'name'
+                                    await DatabaseService()
+                                        .userInfoData(name, user.uid);
+                                    print("register successfully");
+                                  }
+
+                                  if (user?.emailVerified ?? false) {
+                                    print("verified");
+                                  } else {
+                                    print("not");
+                                  }
+                                } on FirebaseAuthException catch (e) {
+                                  if (e.code == "email-already-in-use") {
+                                    setState(() {
+                                      showError = "email already in use";
+                                    });
+                                  } else if (e.code == "invalid-email") {
+                                    setState(() {
+                                      showError = "invalid email";
+                                    });
+                                  } else {
+                                    print(e.code);
+                                  }
+                                }
+                              } else {
+                                setState(() {
+                                  showError =
+                                      "The length of password at least 8";
+                                });
+                              }
                             } else {
-                              print("samuel");
-                            }
-                          } on FirebaseAuthException catch (e) {
-                            if (e.code == "user-not-found") {
-                              print("user-not-found");
-                            } else if (e.code == "wrong-password") {
-                              print("email or password not correct");
+                              setState(() {
+                                showError = "Password is not similar";
+                              });
                             }
                           }
                         },
