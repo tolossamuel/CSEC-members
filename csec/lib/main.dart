@@ -1,4 +1,6 @@
+import 'package:csec/homePage/Memebers/atendance.dart';
 import 'package:csec/homePage/Memebers/home.dart';
+import 'package:csec/homePage/Memebers/navigations_buttons.dart';
 import 'package:csec/login_signup/login.dart';
 import 'package:csec/login_signup/registers.dart';
 import 'package:csec/theming/change.dart';
@@ -26,8 +28,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Note Book',
-      home: const HomePage(),
+      title: 'CSEC ASTU',
+      home: const NavigatorBottom(),
       theme: Provider.of<ThemeProvider>(context).themeData,
       // routes: {
       //   "/register": (context) => const Register(),

@@ -27,12 +27,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.blue[300],
         title: Padding(
           padding: const EdgeInsets.all(8.0),
           child: BigText(
             text: "CSEC ASTU",
-            colors: Colors.blue,
+            colors: const Color.fromARGB(255, 255, 255, 255),
             fontWeights: FontWeight.w800,
             fontSize: 25,
           ),
