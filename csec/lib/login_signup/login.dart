@@ -1,6 +1,7 @@
 import 'package:csec/colors_dimensions/colors.dart';
 import 'package:csec/colors_dimensions/dimensions.dart';
 import 'package:csec/firebase_options.dart';
+import 'package:csec/service/database.dart';
 import 'package:csec/text_icons/normal_text.dart';
 import 'package:csec/text_icons/text.dart';
 import 'package:csec/theming/change.dart';
@@ -126,8 +127,20 @@ class _LoginState extends State<Login> {
                                     email: email, password: password);
 
                             final user = FirebaseAuth.instance.currentUser;
-                            // ignore: use_build_context_synchronously
-                            Navigator.pushReplacementNamed(context, '/home');
+                            if (user != null) {
+                              Map<String, String> userData =
+                                  await DatabaseService().getUserInfo(user.uid);
+                              if (userData["UserType"] == "Admin") {
+                                // ignore: use_build_context_synchronously
+                                Navigator.pushReplacementNamed(
+                                    context, '/admin-login');
+                              } else {
+                                // ignore: use_build_context_synchronously
+                                Navigator.pushReplacementNamed(
+                                    context, '/home');
+                              }
+                              // Now you can use the userData to access user information
+                            }
 
                             if (user?.emailVerified ?? false) {
                             } else {}

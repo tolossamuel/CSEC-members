@@ -1,3 +1,4 @@
+import 'package:csec/homePage/Admin/admin_home_pages.dart';
 import 'package:csec/homePage/Memebers/atendance.dart';
 import 'package:csec/homePage/Memebers/home.dart';
 import 'package:csec/homePage/Memebers/navigations_buttons.dart';
@@ -29,12 +30,13 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'CSEC ASTU',
-      home: const NavigatorBottom(),
+      home: const Login(),
       theme: Provider.of<ThemeProvider>(context).themeData,
-      // routes: {
-      //   "/register": (context) => const Register(),
-      //   "/home": (context) => const HomePage(),
-      // },
+      routes: {
+        "/register": (context) => const Register(),
+        "/home": (context) => const HomePage(),
+        "/admin-login": (context) => const AdminHomePages(),
+      },
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:csec/colors_dimensions/dimensions.dart';
+import 'package:csec/homePage/Memebers/present_absent.dart';
 import 'package:csec/text_icons/normal_text.dart';
 import 'package:csec/theming/change.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class _AttendanceState extends State<Attendance> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> _presentAbsentList = ["P", "P", "P", "P", "A", "E", "A", "P"];
     return Scaffold(
       body: Container(
           child: CustomScrollView(
@@ -121,18 +123,105 @@ class _AttendanceState extends State<Attendance> {
           ),
           // body part
           SliverToBoxAdapter(
-              child: Container(
-            padding: EdgeInsets.fromLTRB(Dimensions.width5 * 4,
-                Dimensions.height5, Dimensions.width5, Dimensions.height5),
+              child: Expanded(
             child: Container(
-                alignment: Alignment.topCenter,
-                height: Dimensions.height5 * 5,
-                width: Dimensions.screenWidth,
-                child: Row(children: [
-                  NormalText(
-                    text: "Attendance",
-                  ),
-                ])),
+              padding: EdgeInsets.fromLTRB(Dimensions.width5 * 4,
+                  Dimensions.height5, Dimensions.width5, Dimensions.height5),
+              child: Expanded(
+                child: Container(
+                    alignment: Alignment.topCenter,
+                    width: Dimensions.screenWidth,
+                    child: Column(children: [
+                      SizedBox(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: NormalText(
+                                  text: "Attendance",
+                                  fontWeights: FontWeight.bold,
+                                  fontSize: 25,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.circle,
+                                        color: Colors.green,
+                                        size: 8,
+                                      ),
+                                      SizedBox(
+                                        width: Dimensions.width5,
+                                      ),
+                                      NormalText(
+                                        text: "Present",
+                                        fontSize: 12,
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.circle,
+                                        color: Colors.red,
+                                        size: 8,
+                                      ),
+                                      SizedBox(
+                                        width: Dimensions.width5,
+                                      ),
+                                      NormalText(
+                                        text: "Absent",
+                                        fontSize: 12,
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.circle,
+                                        color: Colors.yellow,
+                                        size: 8,
+                                      ),
+                                      SizedBox(
+                                        width: Dimensions.width5,
+                                      ),
+                                      NormalText(
+                                        text: "Authorized",
+                                        fontSize: 12,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _presentAbsentList.length,
+                            itemBuilder: (context, index) {
+                              return PresentAbsentList(
+                                isPresentOrAbsent: _presentAbsentList[index],
+                                name: "Contest",
+                                date: "23, 2023",
+                              );
+                            }),
+                      )
+                    ])),
+              ),
+            ),
           ))
         ],
       )),

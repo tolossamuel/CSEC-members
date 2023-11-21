@@ -218,7 +218,6 @@ class _RegisterState extends State<Register> {
                             if (password == configPassword) {
                               if (password.length >= 8) {
                                 try {
-                                  print('try');
                                   await FirebaseAuth.instance
                                       .createUserWithEmailAndPassword(
                                           email: email, password: password);
@@ -227,7 +226,7 @@ class _RegisterState extends State<Register> {
                                   if (user != null) {
                                     // Use the correct parameter name 'fullname' instead of 'name'
                                     await DatabaseService()
-                                        .userInfoData(name, user.uid);
+                                        .userInfoData(name, "Admin", user.uid);
                                     print("register successfully");
                                   }
 
