@@ -2,6 +2,7 @@ import 'package:csec/colors_dimensions/colors.dart';
 import 'package:csec/colors_dimensions/dimensions.dart';
 import 'package:csec/homePage/Memebers/event_list.dart';
 import 'package:csec/homePage/Memebers/scrollable_icons.dart';
+import 'package:csec/service/database.dart';
 import 'package:csec/text_icons/normal_text.dart';
 import 'package:csec/text_icons/text.dart';
 import 'package:csec/theming/change.dart';
@@ -23,6 +24,25 @@ class _HomePageState extends State<HomePage> {
     Icons.analytics_outlined,
     Icons.book
   ];
+
+  List _eventList = [];
+  @override
+  void initState() {
+    super.initState();
+    feachData();
+  }
+
+  feachData() async {
+    dynamic results = await DatabaseService().getEventList();
+
+    if (results == null) {
+    } else {
+      setState(() {
+        _eventList = results;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,7 +147,35 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: Dimensions.height5 * 4,
               ),
-              EventsLists(),
+              FutureBuilder(
+                future: DatabaseService().getEventList(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    _eventList = snapshot.data!;
+                    print("SamuelTolossa ${_eventList.length}");
+                    return ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _eventList.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.all(10),
+                          child: EventsLists(
+                            name: _eventList[index]["Name"],
+                            time: _eventList[index]["Time"],
+                            locations: _eventList[index]["Locations"],
+                            date: _eventList[index]["Date"],
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             ],
           )),
     );

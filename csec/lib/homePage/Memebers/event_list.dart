@@ -4,7 +4,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class EventsLists extends StatelessWidget {
-  const EventsLists({super.key});
+  final String name;
+  final String time;
+  final String locations;
+  final String date;
+  const EventsLists(
+      {super.key,
+      required this.name,
+      required this.time,
+      required this.locations,
+      required this.date});
 
   @override
   Widget build(BuildContext context) {
@@ -19,21 +28,26 @@ class EventsLists extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
+            width: Dimensions.screenWidth * 0.6,
             padding: EdgeInsets.all(10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 NormalText(
-                  text: "Contest",
+                  text: name,
                   fontSize: 25,
                 ),
                 NormalText(
-                  text: "jun, 20 2023",
+                  text: date,
                   fontSize: 17,
                 ),
                 NormalText(
-                  text: "CSEC ASTU block 509 room 9",
+                  text: time,
+                  fontSize: 17,
+                ),
+                NormalText(
+                  text: locations,
                   fontSize: 16,
                 ),
               ],

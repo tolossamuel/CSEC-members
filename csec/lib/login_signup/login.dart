@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  const Login({Key? key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -20,11 +20,14 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  bool _loading = false; // Add this variable to track loading state
   final OutlineInputBorder border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(Dimensions.height5 * 8),
-      borderSide: const BorderSide(
-        color: Color.fromARGB(255, 255, 255, 255),
-      ));
+    borderRadius: BorderRadius.circular(Dimensions.height5 * 8),
+    borderSide: const BorderSide(
+      color: Color.fromARGB(255, 255, 255, 255),
+    ),
+  );
+
   @override
   void initState() {
     _email = TextEditingController();
@@ -43,34 +46,37 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          ),
-          builder: (context, snapshot) {
-            return SingleChildScrollView(
-              child: Center(
-                child: SizedBox(
-                  width: Dimensions.screenWidth,
-                  height: Dimensions.screenHeight,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        Dimensions.width5 * 2,
-                        Dimensions.height5,
-                        Dimensions.width5 * 2,
-                        Dimensions.height5),
-                    child: Column(children: [
+        future: Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        ),
+        builder: (context, snapshot) {
+          return SingleChildScrollView(
+            child: Center(
+              child: SizedBox(
+                width: Dimensions.screenWidth,
+                height: Dimensions.screenHeight,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    Dimensions.width5 * 2,
+                    Dimensions.height5,
+                    Dimensions.width5 * 2,
+                    Dimensions.height5,
+                  ),
+                  child: Column(
+                    children: [
                       Row(
                         children: [
                           Container(
-                              alignment: Alignment.center,
-                              height: Dimensions.screenHeight * 0.15,
-                              width: Dimensions.screenWidth * 0.8,
-                              child: BigText(
-                                text: "CSEC ASTU",
-                                fontSize: 30,
-                                colors: ColorsHome.mainColor,
-                                fontWeights: FontWeight.bold,
-                              )),
+                            alignment: Alignment.center,
+                            height: Dimensions.screenHeight * 0.15,
+                            width: Dimensions.screenWidth * 0.8,
+                            child: BigText(
+                              text: "CSEC ASTU",
+                              fontSize: 30,
+                              colors: ColorsHome.mainColor,
+                              fontWeights: FontWeight.bold,
+                            ),
+                          ),
                           IconButton(
                             onPressed: () {
                               setState(() {
@@ -79,9 +85,10 @@ class _LoginState extends State<Login> {
                                     .toggleTheme();
                               });
                             },
-                            icon: Icon(Provider.of<ThemeProvider>(context,
-                                    listen: false)
-                                .iconData),
+                            icon: Icon(
+                              Provider.of<ThemeProvider>(context, listen: false)
+                                  .iconData,
+                            ),
                           )
                         ],
                       ),
@@ -89,73 +96,78 @@ class _LoginState extends State<Login> {
                         width: Dimensions.screenWidth * 0.9,
                         height: Dimensions.screenHeight * 0.07,
                         child: TextField(
-                            controller: _email,
-                            keyboardType: TextInputType.emailAddress,
-                            autocorrect: false,
-                            enableSuggestions: false,
-                            decoration: InputDecoration(
-                              hintText: "Email",
-                              border: border,
-                              focusedBorder: border,
-                            )),
+                          controller: _email,
+                          keyboardType: TextInputType.emailAddress,
+                          autocorrect: false,
+                          enableSuggestions: false,
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            border: border,
+                            focusedBorder: border,
+                          ),
+                        ),
                       ),
                       SizedBox(height: Dimensions.height5 * 5),
                       SizedBox(
                         width: Dimensions.screenWidth * 0.9,
                         height: Dimensions.screenHeight * 0.07,
                         child: TextField(
-                            obscureText: true,
-                            autocorrect: false,
-                            controller: _password,
-                            enableSuggestions: false,
-                            decoration: InputDecoration(
-                              hintText: "Password",
-                              border: border,
-                              focusedBorder: border,
-                            )),
+                          obscureText: true,
+                          autocorrect: false,
+                          controller: _password,
+                          enableSuggestions: false,
+                          decoration: InputDecoration(
+                            hintText: "Password",
+                            border: border,
+                            focusedBorder: border,
+                          ),
+                        ),
                       ),
                       SizedBox(
                         height: Dimensions.height5 * 8,
                       ),
                       OutlinedButton(
-                        onPressed: () async {
-                          final email = _email.text;
-                          final password = _password.text;
-                          try {
-                            await FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                                    email: email, password: password);
+                        onPressed: _loading
+                            ? null // Disable button if loading
+                            : () async {
+                                setState(() {
+                                  _loading = true; // Set loading to true
+                                });
 
-                            final user = FirebaseAuth.instance.currentUser;
-                            if (user != null) {
-                              Map<String, String> userData =
-                                  await DatabaseService().getUserInfo(user.uid);
-                              if (userData["UserType"] == "Admin") {
-                                // ignore: use_build_context_synchronously
-                                Navigator.pushReplacementNamed(
-                                    context, '/admin-login');
-                              } else {
-                                // ignore: use_build_context_synchronously
-                                Navigator.pushReplacementNamed(
-                                    context, '/home');
-                              }
-                              // Now you can use the userData to access user information
-                            }
+                                final email = _email.text;
+                                final password = _password.text;
 
-                            if (user?.emailVerified ?? false) {
-                            } else {}
-                          } on FirebaseAuthException catch (e) {
-                            if (e.code == "user-not-found") {
-                              print("user-not-found");
-                            } else if (e.code == "wrong-password") {
-                              print("wrong-password");
-                            } else if (e.code == "invalid-email") {
-                              print("invalid-email");
-                            } else {
-                              print(e.code);
-                            }
-                          }
-                        },
+                                try {
+                                  await FirebaseAuth.instance
+                                      .signInWithEmailAndPassword(
+                                    email: email,
+                                    password: password,
+                                  );
+
+                                  final user =
+                                      FirebaseAuth.instance.currentUser;
+                                  if (user != null) {
+                                    Map<String, String> userData =
+                                        await DatabaseService()
+                                            .getUserInfo(user.uid);
+
+                                    if (userData["UserType"] == "Admin") {
+                                      Navigator.pushReplacementNamed(
+                                          context, '/admin-login');
+                                    } else {
+                                      Navigator.pushReplacementNamed(
+                                          context, '/home');
+                                    }
+                                  }
+                                } on FirebaseAuthException catch (e) {
+                                  // Handle FirebaseAuthException
+                                } finally {
+                                  setState(() {
+                                    _loading =
+                                        false; // Set loading to false after operation
+                                  });
+                                }
+                              },
                         style: ButtonStyle(
                           shape: MaterialStateProperty.all<OutlinedBorder>(
                             RoundedRectangleBorder(
@@ -163,23 +175,35 @@ class _LoginState extends State<Login> {
                                   20.0), // Set the desired border radius
                             ),
                           ),
-                          minimumSize: MaterialStateProperty.all<Size>(Size(
+                          minimumSize: MaterialStateProperty.all<Size>(
+                            Size(
                               Dimensions.screenWidth * 0.9,
-                              Dimensions.screenHeight * 0.07)),
+                              Dimensions.screenHeight * 0.07,
+                            ),
+                          ),
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              ColorsHome.mainColor),
+                            ColorsHome.mainColor,
+                          ),
                           side: MaterialStateProperty.all<BorderSide>(
-                            const BorderSide(
-                                color: ColorsHome.mainColor, width: 2.0),
+                            BorderSide(
+                              color: ColorsHome.mainColor,
+                              width: 2.0,
+                            ),
                           ),
                         ),
-                        child: const Text(
-                          "Log in",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                          ),
-                        ),
+                        child: _loading
+                            ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              )
+                            : const Text(
+                                "Log in",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
                       ),
                       SizedBox(
                         height: Dimensions.height5 * 2,
@@ -190,7 +214,8 @@ class _LoginState extends State<Login> {
                           onPressed: () {},
                           child: NormalText(
                             text: "Forget Password",
-                            colors: null, // You can set the color if needed
+                            colors: null,
+                            // You can set the color if needed
                             fontSize: 18,
                           ),
                         ),
@@ -201,10 +226,11 @@ class _LoginState extends State<Login> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: TextButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, "/register");
-                            },
-                            child: NormalText(text: "Create account")),
+                          onPressed: () {
+                            Navigator.pushNamed(context, "/register");
+                          },
+                          child: NormalText(text: "Create account"),
+                        ),
                       ),
                       SizedBox(
                         height: Dimensions.height5 * 5,
@@ -221,67 +247,82 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextButton(
-                              style: ButtonStyle(
-                                elevation: MaterialStateProperty.all(2),
-                                shadowColor: MaterialStateProperty.all(
-                                    const Color.fromARGB(255, 0, 0, 0)),
-                                minimumSize: MaterialStateProperty.all<Size>(
-                                    Size(Dimensions.screenWidth * 0.45,
-                                        Dimensions.screenHeight * 0.05)),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        ColorsHome.mainColor),
-                                shape:
-                                    MaterialStateProperty.all<OutlinedBorder>(
-                                        const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.zero),
-                                  // Set border radius to zero for a rectangular shape
-                                )),
+                            style: ButtonStyle(
+                              elevation: MaterialStateProperty.all(2),
+                              shadowColor: MaterialStateProperty.all(
+                                const Color.fromARGB(255, 0, 0, 0),
                               ),
-                              onPressed: () {},
-                              child: const Center(
-                                child: Text(
-                                  "f",
-                                  style: TextStyle(
-                                      fontSize: 30,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w900),
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                Size(
+                                  Dimensions.screenWidth * 0.45,
+                                  Dimensions.screenHeight * 0.05,
                                 ),
-                              )),
-                          TextButton(
-                              style: ButtonStyle(
-                                elevation: MaterialStateProperty.all(2),
-                                shadowColor: MaterialStateProperty.all(
-                                    const Color.fromARGB(255, 0, 0, 0)),
-                                minimumSize: MaterialStateProperty.all<Size>(
-                                    Size(Dimensions.screenWidth * 0.45,
-                                        Dimensions.screenHeight * 0.07)),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        ColorsHome.buttonBackgroundColor),
-                                shape:
-                                    MaterialStateProperty.all<OutlinedBorder>(
-                                        const RoundedRectangleBorder(
+                              ),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                ColorsHome.mainColor,
+                              ),
+                              shape: MaterialStateProperty.all<OutlinedBorder>(
+                                const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.all(Radius.zero),
                                   // Set border radius to zero for a rectangular shape
-                                )),
+                                ),
                               ),
-                              onPressed: () {},
-                              child: Center(
-                                child: SizedBox(
-                                    height: Dimensions.screenHeight * 0.03,
-                                    width: Dimensions.screenWidth * 0.3,
-                                    child: Image.asset(
-                                        "assets/images/download.png")),
-                              ))
+                            ),
+                            onPressed: () {},
+                            child: const Center(
+                              child: Text(
+                                "f",
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            style: ButtonStyle(
+                              elevation: MaterialStateProperty.all(2),
+                              shadowColor: MaterialStateProperty.all(
+                                const Color.fromARGB(255, 0, 0, 0),
+                              ),
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                Size(
+                                  Dimensions.screenWidth * 0.45,
+                                  Dimensions.screenHeight * 0.07,
+                                ),
+                              ),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                ColorsHome.buttonBackgroundColor,
+                              ),
+                              shape: MaterialStateProperty.all<OutlinedBorder>(
+                                const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.zero),
+                                  // Set border radius to zero for a rectangular shape
+                                ),
+                              ),
+                            ),
+                            onPressed: () {},
+                            child: Center(
+                              child: SizedBox(
+                                height: Dimensions.screenHeight * 0.03,
+                                width: Dimensions.screenWidth * 0.3,
+                                child: Image.asset(
+                                  "assets/images/download.png",
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
-                      )
-                    ]),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            );
-          }),
+            ),
+          );
+        },
+      ),
     );
   }
 }
