@@ -2,6 +2,7 @@ import 'package:csec/colors_dimensions/dimensions.dart';
 import 'package:csec/homePage/Memebers/present_absent.dart';
 import 'package:csec/text_icons/normal_text.dart';
 import 'package:csec/theming/change.dart';
+import 'package:csec/theming/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -50,7 +51,10 @@ class _AttendanceState extends State<Attendance> {
             automaticallyImplyLeading: false,
             collapsedHeight: Dimensions.screenHeight * 0.13,
             pinned: true,
-            backgroundColor: Colors.blue[300],
+            backgroundColor:
+                Provider.of<ThemeProvider>(context).themeData == lightMode
+                    ? Colors.lightBlue // Use light primary color
+                    : Color.fromARGB(255, 64, 65, 64),
             expandedHeight: Dimensions.screenHeight * 0.3,
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(children: [

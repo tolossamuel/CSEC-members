@@ -1,11 +1,15 @@
 import 'package:csec/homePage/Memebers/atendance.dart';
 import 'package:csec/homePage/Memebers/home.dart';
 import 'package:csec/homePage/Memebers/profile.dart';
+import 'package:csec/theming/change.dart';
+import 'package:csec/theming/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:provider/provider.dart';
 
 class NavigatorBottom extends StatelessWidget {
-  const NavigatorBottom({super.key});
+  final String uid;
+  const NavigatorBottom({super.key, required this.uid});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +20,13 @@ class NavigatorBottom extends StatelessWidget {
     return PersistentTabView(
       context,
       controller: _controller,
-      screens: _buildScreens(),
+      screens: _buildScreens(uid),
       items: _navBarsItems(),
       confineInSafeArea: true,
-      backgroundColor: Colors.white, // Default is Colors.white.
+      backgroundColor: Provider.of<ThemeProvider>(context).themeData ==
+              lightMode
+          ? const Color.fromARGB(255, 235, 235, 235) // Use light primary color
+          : Color.fromARGB(255, 28, 28, 28), // Default is Colors.white.
       handleAndroidBackButtonPress: true, // Default is true.
       resizeToAvoidBottomInset:
           true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
@@ -49,8 +56,8 @@ class NavigatorBottom extends StatelessWidget {
   }
 }
 
-List<Widget> _buildScreens() {
-  return [HomePage(), Attendance(), Profile()];
+List<Widget> _buildScreens(String id) {
+  return [HomePage(id: id), Attendance(), Profile(id: id)];
 }
 
 List<PersistentBottomNavBarItem> _navBarsItems() {

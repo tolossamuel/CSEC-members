@@ -20,7 +20,10 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   late final TextEditingController _email;
   late final TextEditingController _password;
-  bool _loading = false; // Add this variable to track loading state
+  bool _loading = false;
+  bool _isPasswordVisible = false;
+  bool _isPasswordVisibleForNext =
+      false; // Add this variable to track loading state
   final OutlineInputBorder border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(Dimensions.height5 * 8),
     borderSide: const BorderSide(
@@ -44,12 +47,44 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    bool userChecked = false;
     return Scaffold(
       body: FutureBuilder(
         future: Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         ),
         builder: (context, snapshot) {
+          Future<void> checkUser() async {
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              // User is signed in
+
+              Map<String, String> userData =
+                  await DatabaseService().getUserInfo(user.uid);
+
+              if (userData["UserType"] == "Admin") {
+                Navigator.pushReplacementNamed(context, '/admin-login');
+              } else {
+                Navigator.pushReplacementNamed(context, '/home',
+                    arguments: user.uid);
+              }
+            } else {
+              // No user is signed in
+              print("not login");
+            }
+            userChecked = true;
+          }
+
+          if (snapshot.connectionState == ConnectionState.done &&
+              !userChecked) {
+            checkUser();
+          }
+
+          // Wait until user check is complete before building UI
+          if (!userChecked) {
+            return Center(child: CircularProgressIndicator());
+          }
+
           return SingleChildScrollView(
             child: Center(
               child: SizedBox(
@@ -108,15 +143,29 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       SizedBox(height: Dimensions.height5 * 5),
+                      SizedBox(height: Dimensions.height5 * 5),
                       SizedBox(
                         width: Dimensions.screenWidth * 0.9,
                         height: Dimensions.screenHeight * 0.07,
                         child: TextField(
-                          obscureText: true,
-                          autocorrect: false,
                           controller: _password,
+                          obscureText: !_isPasswordVisible,
+                          autocorrect: false,
                           enableSuggestions: false,
                           decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                            ),
                             hintText: "Password",
                             border: border,
                             focusedBorder: border,
@@ -150,6 +199,8 @@ class _LoginState extends State<Login> {
                                     Map<String, String> userData =
                                         await DatabaseService()
                                             .getUserInfo(user.uid);
+                                    DatabaseService()
+                                        .getCurrentUserStates(user.uid);
 
                                     if (userData["UserType"] == "Admin") {
                                       Navigator.pushReplacementNamed(
@@ -160,6 +211,8 @@ class _LoginState extends State<Login> {
                                     }
                                   }
                                 } on FirebaseAuthException catch (e) {
+                                  print(e.code);
+                                  print("name");
                                   // Handle FirebaseAuthException
                                 } finally {
                                   setState(() {
@@ -222,98 +275,6 @@ class _LoginState extends State<Login> {
                       ),
                       SizedBox(
                         height: Dimensions.height5 * 0.5,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, "/register");
-                          },
-                          child: NormalText(text: "Create account"),
-                        ),
-                      ),
-                      SizedBox(
-                        height: Dimensions.height5 * 5,
-                      ),
-                      BigText(
-                        text: "OR CONNECT WITH",
-                        colors: ColorsHome.signColor,
-                        fontSize: 18,
-                      ),
-                      SizedBox(
-                        height: Dimensions.height5 * 6,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                            style: ButtonStyle(
-                              elevation: MaterialStateProperty.all(2),
-                              shadowColor: MaterialStateProperty.all(
-                                const Color.fromARGB(255, 0, 0, 0),
-                              ),
-                              minimumSize: MaterialStateProperty.all<Size>(
-                                Size(
-                                  Dimensions.screenWidth * 0.45,
-                                  Dimensions.screenHeight * 0.05,
-                                ),
-                              ),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                ColorsHome.mainColor,
-                              ),
-                              shape: MaterialStateProperty.all<OutlinedBorder>(
-                                const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.zero),
-                                  // Set border radius to zero for a rectangular shape
-                                ),
-                              ),
-                            ),
-                            onPressed: () {},
-                            child: const Center(
-                              child: Text(
-                                "f",
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            style: ButtonStyle(
-                              elevation: MaterialStateProperty.all(2),
-                              shadowColor: MaterialStateProperty.all(
-                                const Color.fromARGB(255, 0, 0, 0),
-                              ),
-                              minimumSize: MaterialStateProperty.all<Size>(
-                                Size(
-                                  Dimensions.screenWidth * 0.45,
-                                  Dimensions.screenHeight * 0.07,
-                                ),
-                              ),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                ColorsHome.buttonBackgroundColor,
-                              ),
-                              shape: MaterialStateProperty.all<OutlinedBorder>(
-                                const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.zero),
-                                  // Set border radius to zero for a rectangular shape
-                                ),
-                              ),
-                            ),
-                            onPressed: () {},
-                            child: Center(
-                              child: SizedBox(
-                                height: Dimensions.screenHeight * 0.03,
-                                width: Dimensions.screenWidth * 0.3,
-                                child: Image.asset(
-                                  "assets/images/download.png",
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),

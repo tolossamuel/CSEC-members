@@ -3,17 +3,12 @@ import 'package:csec/text_icons/normal_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class EventsLists extends StatelessWidget {
+class StudentListForAdmin extends StatelessWidget {
   final String name;
-  final String time;
-  final String locations;
-  final String date;
-  const EventsLists(
-      {super.key,
-      required this.name,
-      required this.time,
-      required this.locations,
-      required this.date});
+
+  final String userType;
+  const StudentListForAdmin(
+      {super.key, required this.name, required this.userType});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +16,7 @@ class EventsLists extends StatelessWidget {
       height: Dimensions.screenHeight * 0.15,
       width: Dimensions.screenWidth,
       decoration: BoxDecoration(
-        color: Color.fromRGBO(157, 159, 159, 0.4),
+        color: Color.fromRGBO(157, 159, 159, 0.2),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -37,19 +32,10 @@ class EventsLists extends StatelessWidget {
                 NormalText(
                   text: name,
                   fontSize: 25,
-                  fontWeights: FontWeight.bold,
                 ),
                 NormalText(
-                  text: date,
+                  text: userType,
                   fontSize: 17,
-                ),
-                NormalText(
-                  text: time,
-                  fontSize: 17,
-                ),
-                NormalText(
-                  text: locations,
-                  fontSize: 16,
                 ),
               ],
             ),

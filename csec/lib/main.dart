@@ -1,11 +1,15 @@
 import 'package:csec/homePage/Admin/addEvents.dart';
 import 'package:csec/homePage/Admin/admin_home_pages.dart';
+import 'package:csec/homePage/Admin/members_list.dart';
 import 'package:csec/homePage/Memebers/atendance.dart';
+import 'package:csec/homePage/Memebers/edite_profile.dart';
 import 'package:csec/homePage/Memebers/home.dart';
 import 'package:csec/homePage/Memebers/navigations_buttons.dart';
+import 'package:csec/homePage/Memebers/security.dart';
 import 'package:csec/login_signup/login.dart';
 import 'package:csec/login_signup/registers.dart';
 import 'package:csec/theming/change.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,6 +37,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
     return FutureBuilder(
       future: _initialization,
       builder: (context, snapshot) {
@@ -44,12 +49,34 @@ class MyApp extends StatelessWidget {
             theme: Provider.of<ThemeProvider>(context).themeData,
             routes: {
               "/register": (context) => const Register(),
-              "/home": (context) => const HomePage(),
+              "/home": (context) {
+                final argument =
+                    ModalRoute.of(context)?.settings.arguments as String;
+                return NavigatorBottom(uid: argument);
+              },
               "/admin-login": (context) => const AdminHomePages(),
               "/add-events": (context) => const AddEvents(),
+              "/edit-profile": (context) {
+                final arguments = Get.arguments as Map<String, dynamic>;
+                return EditProfile(
+                  id: arguments['id'],
+                  userName: arguments['userName'],
+                  schoolIdUser: arguments['schoolIdUser'],
+                  userDepartment: arguments['userDepartment'],
+                  userBatch: arguments['userBatch'],
+                );
+              },
+              "/security-issue": (context) {
+                final arguments = Get.arguments as User;
+
+                return SecurityIssue(
+                  user: arguments,
+                );
+              }
             },
           );
         }
+
         return const MaterialApp(
           home: Scaffold(
             body: Center(
