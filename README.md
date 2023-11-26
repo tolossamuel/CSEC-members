@@ -8,7 +8,6 @@ CSEC Member Manager is an Android application designed to streamline the managem
 - [Usage](#usage)
 - [Admin Features](#admin-features)
 - [Member Features](#member-features)
-- [Contributing](#contributing)
 - [License](#license)
 
 
@@ -179,3 +178,85 @@ Public Event Archives:
 
 Create an archive or history section for past public events, allowing users to explore and learn about previous events.
 
+## Useages
+[Admin Dashboard:](#admin)
+
+Login and Authentication:
+
+Admins log in securely with their credentials, ensuring access to administrative features.
+Create New Events:
+
+Admins can create and schedule new events through the app.
+Manage Event Details:
+
+Edit event details, including the event name, date, time, location, and additional information.
+Interactive Features:
+
+Set up interactive elements within events, such as polls, Q&A sessions, and comments.
+Virtual Events (Future Enhancement):
+
+Plan and manage virtual events, facilitating online participation for members.
+Event Notifications:
+
+Receive notifications and alerts about upcoming events, allowing admins to stay informed.
+Attendance Tracking:
+
+Monitor and track attendance for each event, ensuring accurate records.
+Add New Members:
+
+Admins can add new members to the club, providing necessary details for account creation.
+Member Profiles:
+
+Access and view member profiles, including attendance history, preferences, and achievements.
+Controlled Onboarding Process:
+
+Ensure a controlled onboarding process for new members, allowing access only after admin approval.
+Attendance States:
+
+Check attendance states of individual members, both in real-time and historically.
+Edit Member Profiles:
+
+Modify member profiles, update information, and manage user accounts.
+Delete Inactive Users:
+
+Admins can remove or suspend members who consistently fail to attend events or violate club policies.
+[Member Management:](#)
+
+User Registration:
+
+New members can register within the app by providing necessary details.
+Profile Creation:
+
+Create and personalize their member profiles with information such as name, profile picture, and interests.
+Login and Authentication:
+
+Log in securely with their credentials to access member-specific features.
+Event Interaction:
+View Public Events:
+
+Access public event pages to view upcoming events, even without logging in.
+Event Listings:
+
+Explore a list of upcoming club events, including details such as date, time, and location.
+Event Details:
+
+Click on specific events to view detailed information, agendas, and interactive features.
+Event Registration:
+
+Register for events directly within the app to secure a spot.
+Event Reminders:
+
+Set reminders for upcoming events to stay informed.
+Attendance Tracking:
+
+View personal attendance records and see how many events they've attended.
+Edit Profile:
+
+Modify profile information, update interests, and add achievements.
+Dark Mode and Accessibility:
+
+Enable dark mode and utilize accessibility features for a personalized and comfortable experience.
+
+## License
+
+This project is licensed under the [Samuel Tolossa](#tolossamuel@gmail.com).
