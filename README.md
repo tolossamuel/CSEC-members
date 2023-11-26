@@ -74,7 +74,7 @@ Account Setup and Personalization:
 The member can further personalize their account settings, update their profile information, and explore the features tailored for them.
 
 ## Futures
-[By Admin](#):
+## Admin Future:
 
 
 - Advanced Analytics and Reporting:
@@ -104,4 +104,28 @@ Ongoing improvements to the app's UI to ensure an intuitive and user-friendly ex
 - Accessibility Features:
 
 Inclusion of accessibility features to ensure the app is usable by individuals with diverse abilities.
+
+## Members Future
+
+Personalized Event Notifications:
+
+Smart event notifications based on members' preferences, interests, and attendance history, ensuring they stay informed about relevant and upcoming events.
+Real-time Attendance Updates:
+
+Real-time updates on attendance states, allowing members to track their attendance records for past events and view their overall participation status.
+Event Recommendations:
+
+AI-driven event recommendations based on members' historical participation, preferences, and club activities, encouraging diverse engagement.
+Profile Customization:
+
+Expanded profile customization options, enabling members to add more details, showcase achievements, and personalize their profiles within the app.
+Interactive Event Features:
+
+Enhanced event features, such as live Q&A sessions, polls, and interactive elements, to make events more engaging and participatory.
+Dark Mode and Accessibility:
+
+Support for dark mode and accessibility features, ensuring the app is usable and comfortable for members in various environments.
+Member Surveys and Feedback:
+
+Surveys and feedback mechanisms within the app to collect members' opinions, preferences, and suggestions for continuous improvement.
 
