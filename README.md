@@ -74,7 +74,8 @@ Account Setup and Personalization:
 The member can further personalize their account settings, update their profile information, and explore the features tailored for them.
 
 ## Futures
-[By Admin](#)
+[By Admin](#):
+
 
 - Advanced Analytics and Reporting:
 
