@@ -72,3 +72,28 @@ Upon successful login, the app prompts the member to change their temporary pass
 Account Setup and Personalization:
 
 The member can further personalize their account settings, update their profile information, and explore the features tailored for them.
+
+## Futures
+[By Admin](#)
+Advanced Analytics and Reporting:
+
+Robust analytics and reporting tools to provide administrators with detailed insights into member attendance, event participation, and user engagement.
+Smart Notifications:
+
+Smart notification systems to keep admins informed about critical events, low attendance, or important updates within the club.
+Automated User Onboarding:
+
+Automated onboarding processes for new members, streamlining the registration and account setup procedures.
+Event Management Enhancements:
+
+Advanced event management features, including the ability to schedule recurring events, set reminders, and manage event resources more effectively.
+Progressive Member Profiles:
+
+Progressive member profiles that allow admins to track and visualize individual member progress, achievements, and contributions within the club.
+Intuitive User Interface (UI) Design:
+
+Ongoing improvements to the app's UI to ensure an intuitive and user-friendly experience for administrators, making navigation and management tasks more efficient.
+Accessibility Features:
+
+Inclusion of accessibility features to ensure the app is usable by individuals with diverse abilities.
+
