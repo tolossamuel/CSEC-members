@@ -111,16 +111,13 @@ class _AttendanceManageState extends State<AttendanceManage> {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           _attendanceList = snapshot.data!;
-                          print("SamuelTolossa ${_attendanceList.length}");
+
                           return ListView.builder(
                             scrollDirection: Axis.vertical,
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: _attendanceList.length,
                             itemBuilder: (context, index) {
-                              print(_attendanceList.length + 23);
-                              print(
-                                  "${_attendanceList[index]} dddddddddddddddddd");
                               return Container(
                                 margin: const EdgeInsets.all(10),
                                 child: AttendanceList(
@@ -152,9 +149,7 @@ class _AttendanceManageState extends State<AttendanceManage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final user = await FirebaseAuth.instance.currentUser;
-          print(true);
-          print(user);
-          print("user current user");
+
           Get.toNamed("/add-attendance", arguments: user);
         },
         child: const Icon(Icons.add),

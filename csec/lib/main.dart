@@ -22,8 +22,6 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  print(1234567890);
-
   runApp(
     ChangeNotifierProvider(
       create: (context) =>

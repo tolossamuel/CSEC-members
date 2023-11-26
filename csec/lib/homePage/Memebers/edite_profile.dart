@@ -265,7 +265,6 @@ class _EditProfileState extends State<EditProfile> {
                                           selectedBach,
                                           selectedDepartment,
                                           _shcoolId.text);
-                                      print("register successfully");
 
                                       // Send email only if the user is successfully registered
                                     }
@@ -278,9 +277,7 @@ class _EditProfileState extends State<EditProfile> {
                                       setState(() {
                                         showError = "invalid email";
                                       });
-                                    } else {
-                                      print(e.code);
-                                    }
+                                    } else {}
                                   } finally {
                                     setState(() {
                                       _loading = false;

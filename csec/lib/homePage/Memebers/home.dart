@@ -206,7 +206,7 @@ class _HomePageState extends State<HomePage> {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           _eventList = snapshot.data!;
-                          print("SamuelTolossa ${_eventList.length}");
+
                           return ListView.builder(
                             scrollDirection: Axis.vertical,
                             physics: const NeverScrollableScrollPhysics(),

@@ -39,7 +39,6 @@ class _MembersListViewsState extends State<MembersListViews> {
       }
     } catch (error) {
       // Handle error if needed
-      print("Error fetching data: $error");
     }
   }
 
@@ -121,8 +120,7 @@ class _MembersListViewsState extends State<MembersListViews> {
                             return Text('Error: ${snapshot.error}');
                           } else {
                             _attedndance = snapshot.data!;
-                            print(_attedndance);
-                            print(_eventList);
+
                             return Container(
                               margin: const EdgeInsets.all(10),
                               child: StudentListForAdmin(

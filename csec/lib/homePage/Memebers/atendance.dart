@@ -108,8 +108,7 @@ class _AttendanceState extends State<Attendance> {
                                         ((_attendance[0] + _attendance[2]) *
                                                 100) /
                                             (_attendance[3]);
-                                    print(_attendance);
-                                    print(widget.id);
+
                                     return Container(
                                       margin: EdgeInsets.only(
                                           top: Dimensions.height5 * 4),

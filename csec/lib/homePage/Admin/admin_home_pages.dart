@@ -43,7 +43,6 @@ class _AdminHomePagesState extends State<AdminHomePages> {
       }
     } catch (error) {
       // Handle error if needed
-      print("Error fetching data: $error");
     }
   }
 
@@ -116,8 +115,6 @@ class _AdminHomePagesState extends State<AdminHomePages> {
                   } else {
                     _eventList = snapshot.data!;
 
-                    print("SamuelTolossa ${_eventList.length}");
-                    print(1222222222);
                     return ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,

@@ -427,7 +427,6 @@ class _RegisterState extends State<Register> {
                                             _loading = !_loading;
                                           });
                                         } else {
-                                          print(e.code);
                                           _loading = !_loading;
                                         }
                                       }

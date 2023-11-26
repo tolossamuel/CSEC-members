@@ -280,7 +280,7 @@ class _SecurityIssueState extends State<SecurityIssue> {
                                                 credential);
                                         await widget.user
                                             .updatePassword(_password.text);
-                                        print("register successfully");
+
                                         // Now you can perform the sensitive operation (e.g., updating the password)
                                       } catch (e) {
                                         // Handle reauthentication failure (e.g., wrong password)
@@ -305,9 +305,7 @@ class _SecurityIssueState extends State<SecurityIssue> {
                                       setState(() {
                                         showError = "invalid email";
                                       });
-                                    } else {
-                                      print(e.code);
-                                    }
+                                    } else {}
                                   } finally {
                                     setState(() {
                                       _loading = false;

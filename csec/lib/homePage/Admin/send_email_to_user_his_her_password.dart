@@ -17,12 +17,8 @@ Future<String> sendEmail(String name, String password, String email) async {
 
   try {
     final sendReport = await send(message, smtpServer);
-    print('Message sent: ' + sendReport.toString());
   } on MailerException catch (e) {
-    print('Message not sent. ${e.message}');
-    for (var p in e.problems) {
-      print('Problem: ${p.code}: ${p.msg}');
-    }
+    for (var p in e.problems) {}
   }
   return "";
 }

@@ -8,9 +8,6 @@ class DatabaseService {
       FirebaseFirestore.instance.collection("UserInfo");
   Map<String, dynamic> _currentUser = {};
   get currentUser async {
-    print("samulllllllllllllllllllll");
-    print(_currentUser["name"]);
-    print("llllllllllllllllllllllll");
     return _currentUser;
   }
 
@@ -22,22 +19,15 @@ class DatabaseService {
         querySnapshot.docs.forEach((elements) {
           itemList.add(elements.data());
         });
-        print("Data fetched successfully");
 
         if (itemList.isNotEmpty &&
             itemList[0] is Map &&
             itemList[0].containsKey("Name")) {
-          print("Name: ${itemList[0]["Name"]}");
-        } else {
-          print("Error: Empty list or missing 'Name' key");
-        }
-      } else {
-        print("Error: No documents found");
-      }
+        } else {}
+      } else {}
 
       return itemList;
     } catch (e) {
-      print("Error: $e");
       return [];
     }
   }
@@ -72,7 +62,7 @@ class DatabaseService {
       return "successfully";
     } catch (e) {
       // Handle the exception, log it, or show an error message to the user.
-      print("Error adding user information: $e");
+
       return "";
     }
   }
@@ -113,28 +103,20 @@ class DatabaseService {
     List itemList = [];
 
     try {
-      print(12000);
       var querySnapshot = await _eventList.get();
       if (querySnapshot.docs.isNotEmpty) {
         querySnapshot.docs.forEach((elements) {
           itemList.add(elements.data());
         });
-        print("Data fetched successfully");
 
         if (itemList.isNotEmpty &&
             itemList[0] is Map &&
             itemList[0].containsKey("Name")) {
-          print("Name: ${itemList[0]["Name"]}");
-        } else {
-          print("Error: Empty list or missing 'Name' key");
-        }
-      } else {
-        print("Error: No documents found");
-      }
+        } else {}
+      } else {}
 
       return itemList;
     } catch (e) {
-      print("Error: $e");
       return [];
     }
   }
@@ -153,7 +135,6 @@ class DatabaseService {
       });
       return "successfully";
     } catch (e) {
-      print("Error adding event: $e");
       return "";
     }
   }
@@ -173,24 +154,17 @@ class DatabaseService {
   Future<List> attendanceList() async {
     List attendanceListStudents = [];
 
-    print(_allAttendanceNameList);
     try {
       var querySnapshot = await _allAttendanceNameList.get();
 
       if (querySnapshot.docs.isNotEmpty) {
         querySnapshot.docs.forEach((element) {
-          print(element);
           attendanceListStudents.add(element.data());
         });
+      } else {}
 
-        print("Data fetched successfully");
-      } else {
-        print("Error: No documents found");
-      }
-      print(attendanceListStudents);
       return attendanceListStudents;
     } catch (e) {
-      print("Error: $e");
       return [];
     }
   }
@@ -206,7 +180,6 @@ class DatabaseService {
       });
       return "Success";
     } catch (e) {
-      print(e);
       return "";
     }
   }
@@ -227,9 +200,7 @@ class DatabaseService {
       await subcollectionRef
           .doc(idName)
           .set({"Attend": attend, "EventName": eventName, "Date": date});
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   // individual attendance
@@ -247,7 +218,6 @@ class DatabaseService {
       var getData = await subcollectionRef.get(); // Added 'await' here
       if (getData.docs.isNotEmpty) {
         getData.docs.forEach((element) {
-          print(element);
           counter.add(element.data()); // Added semicolon here
         });
         for (int i = 0; i < counter.length; i++) {
@@ -272,7 +242,6 @@ class DatabaseService {
   }
 
   Future<List> userEventAttendedList(String id) async {
-    print(123456555555);
     List<dynamic> counter = [];
     try {
       DocumentReference studentDocRef = _attendanceStudent.doc(id);
@@ -282,7 +251,6 @@ class DatabaseService {
       var getData = await subcollectionRef.get(); // Added 'await' here
       if (getData.docs.isNotEmpty) {
         getData.docs.forEach((element) {
-          print(element);
           counter.add(element.data()); // Added semicolon here
         });
       }

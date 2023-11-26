@@ -54,7 +54,6 @@ class _AddAttendanceState extends State<AddAttendance> {
     _timeError = "";
     _dateError = "";
     selectedOption = 1;
-    print("user True");
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -207,7 +206,6 @@ class _AddAttendanceState extends State<AddAttendance> {
                                     shrinkWrap: true,
                                     itemCount: studentList.length,
                                     itemBuilder: (context, index) {
-                                      print(studentList);
                                       return StudentListAttendance(
                                           name: studentList[index]["name"],
                                           index: index,
@@ -321,7 +319,6 @@ class _AddAttendanceState extends State<AddAttendance> {
         _showSnackBar("Error adding attendance: $result");
       }
     } catch (error) {
-      print("Error: $error");
       _showSnackBar("An unexpected error occurred");
     } finally {
       // Move setState out of the finally block

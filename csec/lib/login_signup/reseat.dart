@@ -51,7 +51,6 @@ class _ResetScreenState extends State<ResetScreen> {
         // Navigate back to the login page after sending the reset link
         Navigator.pop(context);
       } catch (e) {
-        print('Password reset error: $e');
         if (e is FirebaseAuthException) {
           if (e.code == 'user-not-found') {
             _showSnackBar("Email not registered. Please sign up.");

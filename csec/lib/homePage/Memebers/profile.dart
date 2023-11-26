@@ -257,7 +257,6 @@ class _ProfileState extends State<Profile> {
                       children: [
                         SpeedDialChild(
                             onTap: () {
-                              print("samu");
                               Get.toNamed("/edit-profile", arguments: {
                                 "id": widget.id,
                                 "userName": snapshot.data!["name"],
