@@ -127,3 +127,15 @@ Member Surveys and Feedback:
 
 Surveys and feedback mechanisms within the app to collect members' opinions, preferences, and suggestions for continuous improvement.
 
+## Coming Soon - Future Enhancements
+
+Chat with CSEC Members:
+
+Introducing a chat feature that enables real-time communication among CSEC members. Connect, share ideas, and collaborate seamlessly within the app.
+Virtual Events:
+
+Explore the world of virtual events within the CSEC Member Manager app. Attend and participate in events remotely, opening up new possibilities for engagement and inclusivity.
+Enhanced Security with Biometric Login:
+
+Strengthening security measures with the introduction of biometric login options. Enjoy a secure and convenient login experience using fingerprint or facial recognition.
+
