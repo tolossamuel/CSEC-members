@@ -151,6 +151,7 @@ class _AddEventsFormsState extends State<AddEventsForms> {
                     content: Text("wait..."),
                     duration: Duration(seconds: 100),
                   ));
+
                   final value = await DatabaseService().addEvent(_name.text,
                       _place.text, _timeController.text, _dateController.text);
                   // ignore: use_build_context_synchronously

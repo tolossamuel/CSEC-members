@@ -57,7 +57,7 @@ class _LoginState extends State<Login> {
         ),
         builder: (context, snapshot) {
           Future<void> checkUser() async {
-            final user = FirebaseAuth.instance.currentUser;
+            final user = await FirebaseAuth.instance.currentUser;
             if (user != null) {
               // User is signed in
 
