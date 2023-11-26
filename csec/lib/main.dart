@@ -1,11 +1,9 @@
 import 'package:csec/homePage/Admin/addEvents.dart';
 import 'package:csec/homePage/Admin/add_new_attendance.dart';
 import 'package:csec/homePage/Admin/admin_all_pages_with_navigator.dart';
-import 'package:csec/homePage/Admin/admin_home_pages.dart';
-import 'package:csec/homePage/Admin/members_list.dart';
-import 'package:csec/homePage/Memebers/atendance.dart';
+
 import 'package:csec/homePage/Memebers/edite_profile.dart';
-import 'package:csec/homePage/Memebers/home.dart';
+
 import 'package:csec/homePage/Memebers/navigations_buttons.dart';
 import 'package:csec/homePage/Memebers/security.dart';
 import 'package:csec/login_signup/login.dart';
