@@ -42,13 +42,15 @@ Admin Login
 To access the full suite of administrative features, log in as an admin:
 
 Username: tolossamuel2@gmail.com
+
 Password: 1234567
 
 Member Login - Access and Account Creation
 Accessing the App as a Member
 To ensure a secure and controlled member access, the CSEC Member Manager follows a process where a member can log in only after being added by an admin. Here's how the process works:
 
-Admin Adds a New Member:
+
+[Admin Adds a New Member](#):
 
 Admins have the authority to add new members to the CSEC Member Manager app through the admin dashboard.
 During this process, the admin provides the new member's basic details, including their email address.
