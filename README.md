@@ -259,4 +259,4 @@ Enable dark mode and utilize accessibility features for a personalized and comfo
 
 ## License
 
-This project is licensed under the [Samuel Tolossa](www.tolossamuel1@gmail.com).
+This project is licensed under the [Samuel Tolossa](#www.tolossamuel1@gmail.com).
