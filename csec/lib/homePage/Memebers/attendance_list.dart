@@ -37,7 +37,13 @@ class AttendanceList extends StatelessWidget {
               children: [
                 NormalText(
                   text: "Name : $name",
-                  fontSize: 25,
+                  fontSize: name.length > 30
+                      ? 10
+                      : name.length > 25
+                          ? 15
+                          : name.length > 18
+                              ? 20
+                              : 25,
                   fontWeights: FontWeight.bold,
                 ),
                 NormalText(

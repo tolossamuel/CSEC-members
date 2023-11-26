@@ -36,6 +36,14 @@ class _ResetScreenState extends State<ResetScreen> {
           _loading = true;
         });
 
+        // Check if the email is registered
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: _emailController.text,
+          password:
+              'dummy_password', // You need a password, but it won't be used for authentication
+        );
+
+        // If the email is registered, send the password reset email
         await _auth.sendPasswordResetEmail(email: _emailController.text);
 
         _showSnackBar("Password reset link sent. Check your email.");
@@ -45,7 +53,11 @@ class _ResetScreenState extends State<ResetScreen> {
       } catch (e) {
         print('Password reset error: $e');
         if (e is FirebaseAuthException) {
-          _showSnackBar("Network error}");
+          if (e.code == 'user-not-found') {
+            _showSnackBar("Email not registered. Please sign up.");
+          } else {
+            _showSnackBar("Network error");
+          }
         } else {
           _showSnackBar("An unexpected error occurred.");
         }

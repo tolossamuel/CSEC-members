@@ -31,7 +31,7 @@ class _AddAttendanceState extends State<AddAttendance> {
   TextEditingController _timeController = TextEditingController();
   TextEditingController _name = TextEditingController();
   TextEditingController _totalStudents = TextEditingController();
-  late String _palceError;
+  late String _placeError;
   late String _timeError;
   late String _nameError;
   late String _dateError;
@@ -39,6 +39,8 @@ class _AddAttendanceState extends State<AddAttendance> {
   late String idName;
   late List studentList;
   List counter = [];
+  bool _addingAttendance = false;
+
   @override
   void initState() {
     super.initState();
@@ -48,7 +50,7 @@ class _AddAttendanceState extends State<AddAttendance> {
     _timeController = TextEditingController();
     _endTime = TextEditingController();
     _nameError = "";
-    _palceError = "";
+    _placeError = "";
     _timeError = "";
     _dateError = "";
     selectedOption = 1;
@@ -108,7 +110,8 @@ class _AddAttendanceState extends State<AddAttendance> {
                 });
               },
               icon: Icon(
-                  Provider.of<ThemeProvider>(context, listen: false).iconData),
+                Provider.of<ThemeProvider>(context, listen: false).iconData,
+              ),
             ),
           ),
         ],
@@ -146,105 +149,111 @@ class _AddAttendanceState extends State<AddAttendance> {
                 ? Container()
                 : Container(
                     padding: EdgeInsets.all(Dimensions.height5 * 2),
-                    child: Column(children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: NormalText(
-                              text: "Name",
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: NormalText(
+                                text: "Name",
+                              ),
                             ),
-                          ),
-                          Expanded(child: NormalText(text: "P")),
-                          Expanded(child: NormalText(text: "A")),
-                          Expanded(child: NormalText(text: "E")),
-                        ],
-                      ),
-                      FutureBuilder(
-                          future: DatabaseService().getUserDataMembers(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(child: SpinKitWanderingCubes(
-                                itemBuilder: (BuildContext context, int index) {
-                                  return DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      color: Provider.of<ThemeProvider>(context)
-                                                  .themeData ==
-                                              lightMode
-                                          ? Color.fromARGB(255, 85, 86,
-                                              87) // Use light primary color
-                                          : Color.fromARGB(255, 197, 200, 197),
-                                    ),
-                                  );
-                                },
-                              ));
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else {
-                              studentList = snapshot.data!;
-                              idName =
-                                  "${_name.text}${_timeController.text}${_endTime.text}";
-                              for (int i = 0;
-                                  i < _dateController.text.length;
-                                  i++) {
-                                if (_dateController.text[i] != "/") {
-                                  idName += _dateController.text[i];
+                            Expanded(child: NormalText(text: "P")),
+                            Expanded(child: NormalText(text: "A")),
+                            Expanded(child: NormalText(text: "E")),
+                          ],
+                        ),
+                        FutureBuilder(
+                            future: DatabaseService().getUserDataMembers(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                  child: SpinKitWanderingCubes(
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return DecoratedBox(
+                                        decoration: BoxDecoration(
+                                          color: Provider.of<ThemeProvider>(
+                                                          context)
+                                                      .themeData ==
+                                                  lightMode
+                                              ? Color.fromARGB(255, 85, 86,
+                                                  87) // Use light primary color
+                                              : Color.fromARGB(
+                                                  255, 197, 200, 197),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                studentList = snapshot.data!;
+                                idName =
+                                    "${_name.text}${_timeController.text}${_endTime.text}";
+                                for (int i = 0;
+                                    i < _dateController.text.length;
+                                    i++) {
+                                  if (_dateController.text[i] != "/") {
+                                    idName += _dateController.text[i];
+                                  }
                                 }
+                                return ListView.builder(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: studentList.length,
+                                    itemBuilder: (context, index) {
+                                      print(studentList);
+                                      return StudentListAttendance(
+                                          name: studentList[index]["name"],
+                                          index: index,
+                                          studentList: studentList,
+                                          date: _dateController.text,
+                                          idName: idName,
+                                          attedanceName: _name.text);
+                                    });
                               }
-                              return ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: studentList.length,
-                                  itemBuilder: (context, index) {
-                                    print(studentList);
-                                    return StudentListAttendance(
-                                      name: studentList[index]["name"],
-                                      index: index,
-                                      studentList: studentList,
-                                      date: _dateController.text,
-                                      idName: idName,
-                                    );
-                                  });
-                            }
-                          })
-                      // const StudentAttendance(),
-                    ]),
+                            })
+                        // const StudentAttendance(),
+                      ],
+                    ),
                   ),
             Container(
-                margin: EdgeInsets.all(10),
-                child: OutlinedButton(
-                  onPressed: () {
-                    DatabaseService().addAttendanceToDatabase(
-                        _name.text,
-                        _dateController.text,
-                        _timeController.text,
-                        totallCounter);
-                  },
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<OutlinedBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            20.0), // Set the desired border radius
+              margin: EdgeInsets.all(10),
+              child: OutlinedButton(
+                onPressed: _addingAttendance ? null : _addAttendance,
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          20.0), // Set the desired border radius
+                    ),
+                  ),
+                  minimumSize: MaterialStateProperty.all<Size>(
+                    Size(Dimensions.screenWidth * 0.9,
+                        Dimensions.screenHeight * 0.07),
+                  ),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(ColorsHome.mainColor),
+                  side: MaterialStateProperty.all<BorderSide>(
+                    const BorderSide(color: ColorsHome.mainColor, width: 2.0),
+                  ),
+                ),
+                child: _addingAttendance
+                    ? CircularProgressIndicator()
+                    : const Text(
+                        "Add Attendance",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
                       ),
-                    ),
-                    minimumSize: MaterialStateProperty.all<Size>(Size(
-                        Dimensions.screenWidth * 0.9,
-                        Dimensions.screenHeight * 0.07)),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(ColorsHome.mainColor),
-                    side: MaterialStateProperty.all<BorderSide>(
-                      const BorderSide(color: ColorsHome.mainColor, width: 2.0),
-                    ),
-                  ),
-                  child: const Text(
-                    "Add Attendance",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                ))
+              ),
+            )
           ],
         ),
       ),
@@ -285,6 +294,48 @@ class _AddAttendanceState extends State<AddAttendance> {
           ),
         ),
         controller: controller,
+      ),
+    );
+  }
+
+  void _addAttendance() async {
+    if (_name.text.isEmpty ||
+        _timeController.text.isEmpty ||
+        _dateController.text.isEmpty) {
+      _showSnackBar("All fields are required");
+      return;
+    }
+
+    setState(() {
+      _addingAttendance = true;
+    });
+
+    try {
+      var result = await DatabaseService().addAttendanceToDatabase(_name.text,
+          _dateController.text, _timeController.text, totallCounter);
+
+      if (result == "Success") {
+        _showSnackBar("Attendance added successfully");
+        Navigator.pop(context);
+      } else {
+        _showSnackBar("Error adding attendance: $result");
+      }
+    } catch (error) {
+      print("Error: $error");
+      _showSnackBar("An unexpected error occurred");
+    } finally {
+      // Move setState out of the finally block
+      setState(() {
+        _addingAttendance = false;
+      });
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 3),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:csec/service/database.dart';
 import 'package:csec/text_icons/normal_text.dart';
 import 'package:csec/theming/change.dart';
 import 'package:csec/theming/themes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -128,7 +129,7 @@ class _AddEventsFormsState extends State<AddEventsForms> {
         Container(
             margin: EdgeInsets.all(10),
             child: OutlinedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_name.text.isEmpty) {
                   setState(() {
                     _nameError = "Event Name can't be empty";
@@ -146,8 +147,30 @@ class _AddEventsFormsState extends State<AddEventsForms> {
                     _palceError = "Place Name can't be empty";
                   });
                 } else {
-                  DatabaseService().addEvent(_name.text, _place.text,
-                      _timeController.text, _dateController.text);
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("wait..."),
+                    duration: Duration(seconds: 100),
+                  ));
+                  final value = await DatabaseService().addEvent(_name.text,
+                      _place.text, _timeController.text, _dateController.text);
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  if (value == "successfully") {
+                    // ignore: use_build_context_synchronously
+
+                    Navigator.pop(context);
+                    // ignore: use_build_context_synchronously
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("New Event added successfully"),
+                      duration: Duration(seconds: 3),
+                    ));
+                  } else {
+                    // ignore: use_build_context_synchronously
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("Pleas try again"),
+                      duration: Duration(seconds: 3),
+                    ));
+                  }
                 }
               },
               style: ButtonStyle(

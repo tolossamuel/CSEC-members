@@ -13,6 +13,7 @@ class StudentListAttendance extends StatefulWidget {
   final String date;
   final int index;
   final String idName;
+  final String attedanceName;
   const StudentListAttendance({
     super.key,
     required this.name,
@@ -20,6 +21,7 @@ class StudentListAttendance extends StatefulWidget {
     required this.index,
     required this.date,
     required this.idName,
+    required this.attedanceName,
   });
   int get getNumberPresent {
     print(_StudentListAttendanceState().numberPresent);
@@ -76,7 +78,7 @@ class _StudentListAttendanceState extends State<StudentListAttendance> {
                 DatabaseService().addAttendanceBaseOnUser(
                     widget.studentList[widget.index]["Id"],
                     selectedOption,
-                    widget.name,
+                    widget.attedanceName,
                     widget.date,
                     widget.idName);
                 print("Button value: $value");

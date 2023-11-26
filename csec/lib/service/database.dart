@@ -49,10 +49,9 @@ class DatabaseService {
     return _currentUser;
   }
 
-  Future userInfoData(
+  Future<String> userInfoData(
       String fullName,
       String userType,
-      String userId,
       String password,
       String email,
       String bach,
@@ -61,7 +60,7 @@ class DatabaseService {
       String id) async {
     try {
       sendEmail(fullName, password, email);
-      await _userInfo.doc(userId).set({
+      await _userInfo.doc(id).set({
         "name": fullName,
         "UserType": userType,
         "Email": email,
@@ -70,9 +69,11 @@ class DatabaseService {
         "SchoolId": schoolId,
         "Id": id
       });
+      return "successfully";
     } catch (e) {
       // Handle the exception, log it, or show an error message to the user.
       print("Error adding user information: $e");
+      return "";
     }
   }
 
@@ -139,7 +140,7 @@ class DatabaseService {
   }
 
   // Add event to database
-  Future<void> addEvent(
+  Future<String> addEvent(
       String name, String locations, String time, String date) async {
     try {
       await _eventList.add({
@@ -150,9 +151,10 @@ class DatabaseService {
 
         // Add other fields as needed
       });
-      print("Event added successfully");
+      return "successfully";
     } catch (e) {
       print("Error adding event: $e");
+      return "";
     }
   }
 
@@ -193,7 +195,7 @@ class DatabaseService {
     }
   }
 
-  Future<void> addAttendanceToDatabase(
+  Future<String> addAttendanceToDatabase(
       String name, String date, String startTime, int total) async {
     try {
       await _allAttendanceNameList.add({
@@ -202,8 +204,10 @@ class DatabaseService {
         "StartTime": startTime,
         "TotalNumber": total
       });
+      return "Success";
     } catch (e) {
       print(e);
+      return "";
     }
   }
 

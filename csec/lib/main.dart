@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
                   user: arguments,
                 );
               },
-              "/reseat": (context) => ResetScreen(),
+              "/reseat": (context) => const ResetScreen(),
             },
           );
         }

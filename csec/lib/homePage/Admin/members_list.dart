@@ -79,20 +79,17 @@ class _MembersListViewsState extends State<MembersListViews> {
           SizedBox(
             width: Dimensions.width5,
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.menu),
+            child: IconButton(
+                onPressed: () {
+                  setState(() {});
+                },
+                icon: Icon(Icons.refresh_sharp)),
           )
         ],
       ),
-      body: LiquidPullToRefresh(
-        height: Dimensions.screenHeight * 0.2,
-        showChildOpacityTransition: true,
-        onRefresh: () {
-          return Future.delayed(const Duration(seconds: 2), () {
-            setState(() {});
-          });
-        },
+      body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.fromLTRB(Dimensions.width5 * 4,
               Dimensions.height5, Dimensions.width5, Dimensions.height5),
@@ -144,21 +141,12 @@ class _MembersListViewsState extends State<MembersListViews> {
           ),
         ),
       ),
-      floatingActionButton: Ink(
-        decoration: const ShapeDecoration(
-          color: Colors.blue,
-          shape: CircleBorder(),
-        ),
-        child: IconButton(
-          onPressed: () {
-            print(1234);
-            // Your onPressed logic here
-
-            Get.toNamed("/register");
-          },
-          icon: const Icon(Icons.add),
-          // Set the icon color
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigator.pushNamed(context, "/add-events");
+          Get.toNamed("/register");
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

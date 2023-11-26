@@ -184,7 +184,7 @@ class _RegisterState extends State<Register> {
                       SizedBox(height: Dimensions.height5 * 5),
                       SizedBox(
                         width: Dimensions.screenWidth * 0.9,
-                        height: Dimensions.screenHeight * 0.07,
+                        height: Dimensions.screenHeight * 0.1,
                         child: DropdownButtonFormField<String>(
                           value:
                               selectedBach, // You need to manage the selected batch value
@@ -210,7 +210,7 @@ class _RegisterState extends State<Register> {
                       SizedBox(height: Dimensions.height5 * 5),
                       SizedBox(
                         width: Dimensions.screenWidth * 0.9,
-                        height: Dimensions.screenHeight * 0.07,
+                        height: Dimensions.screenHeight * 0.1,
                         child: DropdownButtonFormField<String>(
                           value:
                               selectedDepartment, // You need to manage the selected batch value
@@ -236,7 +236,7 @@ class _RegisterState extends State<Register> {
                       SizedBox(height: Dimensions.height5 * 5),
                       SizedBox(
                         width: Dimensions.screenWidth * 0.9,
-                        height: Dimensions.screenHeight * 0.07,
+                        height: Dimensions.screenHeight * 0.1,
                         child: DropdownButtonFormField<String>(
                           value: selectedUserType,
                           onChanged: (newValue) {
@@ -352,6 +352,9 @@ class _RegisterState extends State<Register> {
                                   if (password == configPassword) {
                                     if (password.length >= 8) {
                                       try {
+                                        String? _adminUid = FirebaseAuth
+                                            .instance.currentUser?.uid;
+
                                         await FirebaseAuth.instance
                                             .createUserWithEmailAndPassword(
                                           email: email,
@@ -364,19 +367,41 @@ class _RegisterState extends State<Register> {
                                           await DatabaseService().userInfoData(
                                               name,
                                               selectedUserType,
-                                              user.uid,
                                               _password.text,
                                               _email.text,
                                               selectedBach,
                                               selectedDepartment,
                                               _shcoolId.text,
                                               user.uid);
+                                          // ignore: use_build_context_synchronously
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(const SnackBar(
                                             content: Text(
                                                 "new user added successfully"),
                                             duration: Duration(seconds: 3),
                                           ));
+
+                                          await FirebaseAuth.instance.signOut();
+                                          User? _adminUser = await FirebaseAuth
+                                              .instance
+                                              .userChanges()
+                                              .firstWhere(
+                                                (user) =>
+                                                    user != null &&
+                                                    user.uid == _adminUid,
+                                                orElse: () => null,
+                                              );
+                                          if (_adminUser != null) {
+                                            // User found, sign in with their details
+                                            await FirebaseAuth.instance
+                                                .signInWithCredential(
+                                              EmailAuthProvider.credential(
+                                                email: user.email!,
+                                                password:
+                                                    'aFakePassword', // Password is not used for Firebase sign-in with an existing user
+                                              ),
+                                            );
+                                          }
 
                                           // Send email only if the user is successfully registered
 
@@ -385,18 +410,25 @@ class _RegisterState extends State<Register> {
                                             password,
                                             email,
                                           );
+                                          setState(() {
+                                            _loading = !_loading;
+                                          });
                                         }
                                       } on FirebaseAuthException catch (e) {
                                         if (e.code == "email-already-in-use") {
                                           setState(() {
                                             showError = "email already in use";
+                                            _loading = !_loading;
                                           });
                                         } else if (e.code == "invalid-email") {
                                           setState(() {
                                             showError = "invalid email";
+
+                                            _loading = !_loading;
                                           });
                                         } else {
                                           print(e.code);
+                                          _loading = !_loading;
                                         }
                                       }
                                       cathc(e) {
