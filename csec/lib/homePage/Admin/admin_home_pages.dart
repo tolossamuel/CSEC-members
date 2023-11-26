@@ -7,6 +7,9 @@ import 'package:csec/text_icons/normal_text.dart';
 import 'package:csec/theming/change.dart';
 import 'package:csec/theming/themes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 
 class AdminHomePages extends StatefulWidget {
@@ -23,6 +26,10 @@ class _AdminHomePagesState extends State<AdminHomePages> {
   void initState() {
     super.initState();
     feachData();
+  }
+
+  Future<void> _handleRefresh() async {
+    return await Future.delayed(Duration(seconds: 2));
   }
 
   Future<void> feachData() async {
@@ -81,51 +88,63 @@ class _AdminHomePagesState extends State<AdminHomePages> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            FutureBuilder(
-              future: DatabaseService().getEventList(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: Container(
-                      height: Dimensions.screenHeight,
-                      width: Dimensions.screenWidth,
-                      alignment: Alignment.center,
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  _eventList = snapshot.data!;
-                  print("SamuelTolossa ${_eventList.length}");
-                  return ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: _eventList.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.all(10),
-                        child: EventsLists(
-                          name: _eventList[index]["Name"],
-                          time: _eventList[index]["Time"],
-                          locations: _eventList[index]["Locations"],
-                          date: _eventList[index]["Date"],
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-          ],
+      body: LiquidPullToRefresh(
+        height: Dimensions.screenHeight * 0.2,
+        showChildOpacityTransition: true,
+        onRefresh: () {
+          return Future.delayed(const Duration(seconds: 2), () {
+            setState(() {});
+          });
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              FutureBuilder(
+                future: DatabaseService().getEventList(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: Container(
+                        height: Dimensions.screenHeight,
+                        width: Dimensions.screenWidth,
+                        alignment: Alignment.center,
+                        child: const CircularProgressIndicator(),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    _eventList = snapshot.data!;
+
+                    print("SamuelTolossa ${_eventList.length}");
+                    print(1222222222);
+                    return ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _eventList.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.all(10),
+                          child: EventsLists(
+                            name: _eventList[index]["Name"],
+                            time: _eventList[index]["Time"],
+                            locations: _eventList[index]["Locations"],
+                            date: _eventList[index]["Date"],
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, "/add-events");
+          // Navigator.pushNamed(context, "/add-events");
+          Get.toNamed("/add-events");
         },
         child: const Icon(Icons.add),
       ),

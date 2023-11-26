@@ -6,9 +6,11 @@ import 'package:csec/service/database.dart';
 import 'package:csec/text_icons/normal_text.dart';
 import 'package:csec/text_icons/text.dart';
 import 'package:csec/theming/change.dart';
+import 'package:csec/theming/themes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class SecurityIssue extends StatefulWidget {
@@ -342,10 +344,20 @@ class _SecurityIssueState extends State<SecurityIssue> {
                       ),
                     ),
                     child: _loading
-                        ? const CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
-                            ),
+                        ? SpinKitCircle(
+                            itemBuilder: (BuildContext context, int index) {
+                              return DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: Provider.of<ThemeProvider>(context)
+                                              .themeData ==
+                                          lightMode
+                                      ? const Color.fromARGB(255, 85, 86,
+                                          87) // Use light primary color
+                                      : const Color.fromARGB(
+                                          255, 197, 200, 197),
+                                ),
+                              );
+                            },
                           )
                         : const Text(
                             "Change Password",

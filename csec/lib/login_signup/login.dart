@@ -5,9 +5,11 @@ import 'package:csec/service/database.dart';
 import 'package:csec/text_icons/normal_text.dart';
 import 'package:csec/text_icons/text.dart';
 import 'package:csec/theming/change.dart';
+import 'package:csec/theming/themes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -26,11 +28,11 @@ class _LoginState extends State<Login> {
       false; // Add this variable to track loading state
   final OutlineInputBorder border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(Dimensions.height5 * 8),
-    borderSide: const BorderSide(
-      color: Color.fromARGB(255, 255, 255, 255),
-    ),
+    borderSide: const BorderSide(),
   );
-
+  // error show for user if he enter wrong inputs
+  String emailError = "";
+  String passwordError = "";
   @override
   void initState() {
     _email = TextEditingController();
@@ -63,14 +65,14 @@ class _LoginState extends State<Login> {
                   await DatabaseService().getUserInfo(user.uid);
 
               if (userData["UserType"] == "Admin") {
-                Navigator.pushReplacementNamed(context, '/admin-login');
+                // ignore: use_build_context_synchronously
+                Navigator.pushReplacementNamed(context, '/admin-login',
+                    arguments: user.uid);
               } else {
+                // ignore: use_build_context_synchronously
                 Navigator.pushReplacementNamed(context, '/home',
                     arguments: user.uid);
               }
-            } else {
-              // No user is signed in
-              print("not login");
             }
             userChecked = true;
           }
@@ -82,7 +84,19 @@ class _LoginState extends State<Login> {
 
           // Wait until user check is complete before building UI
           if (!userChecked) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: SpinKitWanderingCubes(
+              itemBuilder: (BuildContext context, int index) {
+                return DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Provider.of<ThemeProvider>(context).themeData ==
+                            lightMode
+                        ? Color.fromARGB(
+                            255, 85, 86, 87) // Use light primary color
+                        : Color.fromARGB(255, 197, 200, 197),
+                  ),
+                );
+              },
+            ));
           }
 
           return SingleChildScrollView(
@@ -108,7 +122,12 @@ class _LoginState extends State<Login> {
                             child: BigText(
                               text: "CSEC ASTU",
                               fontSize: 30,
-                              colors: ColorsHome.mainColor,
+                              colors: Provider.of<ThemeProvider>(context)
+                                          .themeData ==
+                                      lightMode
+                                  ? const Color.fromARGB(255, 79, 79, 79)
+                                  : const Color.fromARGB(255, 255, 255,
+                                      255), // Use light primary color
                               fontWeights: FontWeight.bold,
                             ),
                           ),
@@ -128,6 +147,19 @@ class _LoginState extends State<Login> {
                         ],
                       ),
                       SizedBox(
+                        height: Dimensions.height5,
+                      ),
+                      CircleAvatar(
+                          radius: Dimensions.height5 * 15,
+                          child: ClipOval(
+                              child: Image.asset(
+                            "assets/images/download.jpeg",
+                            fit: BoxFit.cover,
+                          ))),
+                      SizedBox(
+                        height: Dimensions.height5 * 4,
+                      ),
+                      SizedBox(
                         width: Dimensions.screenWidth * 0.9,
                         height: Dimensions.screenHeight * 0.07,
                         child: TextField(
@@ -136,13 +168,12 @@ class _LoginState extends State<Login> {
                           autocorrect: false,
                           enableSuggestions: false,
                           decoration: InputDecoration(
-                            hintText: "Email",
+                            hintText: "Emial",
                             border: border,
                             focusedBorder: border,
                           ),
                         ),
                       ),
-                      SizedBox(height: Dimensions.height5 * 5),
                       SizedBox(height: Dimensions.height5 * 5),
                       SizedBox(
                         width: Dimensions.screenWidth * 0.9,
@@ -203,16 +234,48 @@ class _LoginState extends State<Login> {
                                         .getCurrentUserStates(user.uid);
 
                                     if (userData["UserType"] == "Admin") {
+                                      // ignore: use_build_context_synchronously
                                       Navigator.pushReplacementNamed(
-                                          context, '/admin-login');
+                                          context, '/admin-login',
+                                          arguments: user.uid);
                                     } else {
+                                      // ignore: use_build_context_synchronously
                                       Navigator.pushReplacementNamed(
-                                          context, '/home');
+                                          context, '/home',
+                                          arguments: user.uid);
                                     }
                                   }
                                 } on FirebaseAuthException catch (e) {
-                                  print(e.code);
-                                  print("name");
+                                  if (e.code == "INVALID_LOGIN_CREDENTIALS") {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text(
+                                          "email or password is not correct"),
+                                      duration: Duration(seconds: 3),
+                                    ));
+                                  } else if (e.code == "invalid-email") {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text("invalid-email"),
+                                      duration: Duration(seconds: 3),
+                                    ));
+                                  } else if (e.code == "channel-error") {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text("Invalid input"),
+                                      duration: Duration(seconds: 3),
+                                    ));
+                                  } else {
+                                    // ignore: use
+                                    print(e.code);
+                                    // _build_context_synchronously
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text("Network error"),
+                                      duration: Duration(seconds: 3),
+                                    ));
+                                  }
+
                                   // Handle FirebaseAuthException
                                 } finally {
                                   setState(() {
@@ -238,17 +301,26 @@ class _LoginState extends State<Login> {
                             ColorsHome.mainColor,
                           ),
                           side: MaterialStateProperty.all<BorderSide>(
-                            BorderSide(
+                            const BorderSide(
                               color: ColorsHome.mainColor,
                               width: 2.0,
                             ),
                           ),
                         ),
                         child: _loading
-                            ? CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
-                                ),
+                            ? SpinKitCircle(
+                                itemBuilder: (BuildContext context, int index) {
+                                  return DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      color: Provider.of<ThemeProvider>(context)
+                                                  .themeData ==
+                                              lightMode
+                                          ? Color.fromARGB(255, 250, 252,
+                                              255) // Use light primary color
+                                          : Color.fromARGB(255, 179, 181, 179),
+                                    ),
+                                  );
+                                },
                               )
                             : const Text(
                                 "Log in",
@@ -264,9 +336,11 @@ class _LoginState extends State<Login> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, "/reseat");
+                          },
                           child: NormalText(
-                            text: "Forget Password",
+                            text: "Forget Password?",
                             colors: null,
                             // You can set the color if needed
                             fontSize: 18,

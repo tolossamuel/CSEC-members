@@ -6,9 +6,11 @@ import 'package:csec/service/database.dart';
 import 'package:csec/text_icons/normal_text.dart';
 import 'package:csec/text_icons/text.dart';
 import 'package:csec/theming/change.dart';
+import 'package:csec/theming/themes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
@@ -52,10 +54,10 @@ class _EditProfileState extends State<EditProfile> {
     "Material",
     "Civil",
     "Architecture",
-    "Water"
+    "Water",
   ];
-  String selectedBach = "";
-  String selectedDepartment = "";
+  late String selectedBach;
+  late String selectedDepartment;
   String showError = "";
 
   IconData iconForPassword = Icons.remove_red_eye_outlined;
@@ -73,6 +75,7 @@ class _EditProfileState extends State<EditProfile> {
     selectedBach = widget.userBatch;
 
     selectedDepartment = widget.userDepartment;
+
     _shcoolId.text = widget.schoolIdUser;
     super.initState();
   }
@@ -118,9 +121,14 @@ class _EditProfileState extends State<EditProfile> {
                         height: Dimensions.screenHeight * 0.15,
                         width: Dimensions.screenWidth * 0.6,
                         child: BigText(
-                          text: "CSEC ASTU",
+                          text: "Edit Profile",
                           fontSize: 30,
-                          colors: ColorsHome.mainColor,
+                          colors: Provider.of<ThemeProvider>(context)
+                                      .themeData ==
+                                  lightMode
+                              ? Color.fromARGB(
+                                  255, 45, 45, 45) // Use light primary color
+                              : const Color.fromARGB(255, 197, 200, 197),
                         ),
                       ),
                       IconButton(
@@ -183,7 +191,7 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(height: Dimensions.height5 * 5),
                   SizedBox(
                     width: Dimensions.screenWidth * 0.9,
-                    height: Dimensions.screenHeight * 0.07,
+                    height: Dimensions.screenHeight * 0.08,
                     child: DropdownButtonFormField<String>(
                       value:
                           selectedBach, // You need to manage the selected batch value
@@ -209,7 +217,7 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(height: Dimensions.height5 * 5),
                   SizedBox(
                     width: Dimensions.screenWidth * 0.9,
-                    height: Dimensions.screenHeight * 0.07,
+                    height: Dimensions.screenHeight * 0.08,
                     child: DropdownButtonFormField<String>(
                       value:
                           selectedDepartment, // You need to manage the selected batch value
@@ -232,33 +240,7 @@ class _EditProfileState extends State<EditProfile> {
                       }).toList(),
                     ),
                   ),
-                  // SizedBox(height: Dimensions.height5 * 5),
-                  // SizedBox(
-                  //   width: Dimensions.screenWidth * 0.9,
-                  //   height: Dimensions.screenHeight * 0.07,
-                  //   child: DropdownButtonFormField<String>(
-                  //     value: selectedUserType,
-                  //     onChanged: (newValue) {
-                  //       setState(() {
-                  //         selectedUserType = newValue!;
-                  //       });
-                  //     },
-                  //     items: userTypes.map((type) {
-                  //       return DropdownMenuItem<String>(
-                  //         value: type,
-                  //         child: Text(type),
-                  //       );
-                  //     }).toList(),
-                  //     decoration: InputDecoration(
-                  //       hintText: "User Type",
-                  //       border: border,
-                  //       focusedBorder: border,
-                  //     ),
-                  //   ),
-                  // ),
-
                   SizedBox(height: Dimensions.height5 * 5),
-
                   SizedBox(
                     height: Dimensions.height5 * 8,
                   ),
@@ -326,13 +308,23 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     child: _loading
-                        ? const CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
-                            ),
+                        ? SpinKitCircle(
+                            itemBuilder: (BuildContext context, int index) {
+                              return DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: Provider.of<ThemeProvider>(context)
+                                              .themeData ==
+                                          lightMode
+                                      ? const Color.fromARGB(255, 85, 86,
+                                          87) // Use light primary color
+                                      : const Color.fromARGB(
+                                          255, 197, 200, 197),
+                                ),
+                              );
+                            },
                           )
                         : const Text(
-                            "Add Student",
+                            "Edit Profile",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,

@@ -1,3 +1,6 @@
+import 'package:csec/homePage/Admin/admin_home_pages.dart';
+import 'package:csec/homePage/Admin/attendace_managements.dart';
+import 'package:csec/homePage/Admin/members_list.dart';
 import 'package:csec/homePage/Memebers/atendance.dart';
 import 'package:csec/homePage/Memebers/home.dart';
 import 'package:csec/homePage/Memebers/profile.dart';
@@ -7,9 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:provider/provider.dart';
 
-class NavigatorBottom extends StatelessWidget {
+class AdminNavigatorButtons extends StatelessWidget {
   final String uid;
-  const NavigatorBottom({super.key, required this.uid});
+  const AdminNavigatorButtons({super.key, required this.uid});
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +61,9 @@ class NavigatorBottom extends StatelessWidget {
 
 List<Widget> _buildScreens(String id) {
   return [
-    HomePage(id: id),
-    Attendance(
-      id: id,
-    ),
+    AdminHomePages(),
+    MembersListViews(),
+    AttendanceManage(),
     Profile(id: id)
   ];
 }
@@ -71,6 +73,12 @@ List<PersistentBottomNavBarItem> _navBarsItems() {
     PersistentBottomNavBarItem(
       icon: Icon(Icons.home),
       title: ("Home"),
+      activeColorPrimary: Colors.blue,
+      inactiveColorPrimary: Colors.amber,
+    ),
+    PersistentBottomNavBarItem(
+      icon: const Icon(Icons.group),
+      title: ("Members"),
       activeColorPrimary: Colors.blue,
       inactiveColorPrimary: Colors.amber,
     ),

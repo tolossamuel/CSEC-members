@@ -6,9 +6,11 @@ import 'package:csec/service/database.dart';
 import 'package:csec/text_icons/normal_text.dart';
 import 'package:csec/text_icons/text.dart';
 import 'package:csec/theming/change.dart';
+import 'package:csec/theming/themes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
@@ -367,12 +369,18 @@ class _RegisterState extends State<Register> {
                                               _email.text,
                                               selectedBach,
                                               selectedDepartment,
-                                              _shcoolId.text);
-                                          print("register successfully");
+                                              _shcoolId.text,
+                                              user.uid);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(const SnackBar(
+                                            content: Text(
+                                                "new user added successfully"),
+                                            duration: Duration(seconds: 3),
+                                          ));
 
                                           // Send email only if the user is successfully registered
 
-                                          await sendEmail(
+                                          sendEmail(
                                             name,
                                             password,
                                             email,
@@ -390,7 +398,13 @@ class _RegisterState extends State<Register> {
                                         } else {
                                           print(e.code);
                                         }
-                                      } finally {
+                                      }
+                                      cathc(e) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: Text(e.code),
+                                          duration: Duration(seconds: 3),
+                                        ));
                                         setState(() {
                                           _loading = false;
                                         });
@@ -426,10 +440,20 @@ class _RegisterState extends State<Register> {
                           ),
                         ),
                         child: _loading
-                            ? const CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
-                                ),
+                            ? SpinKitCircle(
+                                itemBuilder: (BuildContext context, int index) {
+                                  return DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      color: Provider.of<ThemeProvider>(context)
+                                                  .themeData ==
+                                              lightMode
+                                          ? const Color.fromARGB(255, 85, 86,
+                                              87) // Use light primary color
+                                          : const Color.fromARGB(
+                                              255, 197, 200, 197),
+                                    ),
+                                  );
+                                },
                               )
                             : const Text(
                                 "Add Student",

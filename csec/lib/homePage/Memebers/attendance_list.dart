@@ -3,17 +3,19 @@ import 'package:csec/text_icons/normal_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class EventsLists extends StatelessWidget {
+class AttendanceList extends StatelessWidget {
   final String name;
-  final String time;
-  final String locations;
+  final String startTime;
+  final int indexs;
   final String date;
-  const EventsLists(
+  final int totalStudent;
+  const AttendanceList(
       {super.key,
       required this.name,
-      required this.time,
-      required this.locations,
-      required this.date});
+      required this.startTime,
+      required this.date,
+      required this.totalStudent,
+      required this.indexs});
 
   @override
   Widget build(BuildContext context) {
@@ -28,28 +30,27 @@ class EventsLists extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            width: Dimensions.screenWidth * 0.6,
             padding: EdgeInsets.all(10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 NormalText(
-                  text: name,
+                  text: "Name : $name",
                   fontSize: 25,
                   fontWeights: FontWeight.bold,
                 ),
                 NormalText(
-                  text: date,
+                  text: "Start Time: $startTime",
                   fontSize: 17,
                 ),
                 NormalText(
-                  text: time,
+                  text: "Date: $date",
                   fontSize: 17,
                 ),
                 NormalText(
-                  text: locations,
-                  fontSize: 16,
+                  text: "Total Students Present: $totalStudent",
+                  fontSize: 17,
                 ),
               ],
             ),
@@ -57,25 +58,6 @@ class EventsLists extends StatelessWidget {
           SizedBox(
             width: Dimensions.width5 * 2,
           ),
-          Expanded(
-            child: Container(
-              height: Dimensions.screenHeight * 0.18,
-              decoration: const BoxDecoration(
-                color: Color.fromRGBO(157, 159, 159, 0.4),
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(20),
-                    bottomRight: Radius.circular(20)),
-              ),
-              child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(20),
-                      bottomRight: Radius.circular(20)),
-                  child: Image.asset(
-                    "assets/images/csec.jpg",
-                    fit: BoxFit.cover,
-                  )),
-            ),
-          )
         ],
       ),
     );

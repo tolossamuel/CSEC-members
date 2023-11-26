@@ -1,4 +1,6 @@
 import 'package:csec/homePage/Admin/addEvents.dart';
+import 'package:csec/homePage/Admin/add_new_attendance.dart';
+import 'package:csec/homePage/Admin/admin_all_pages_with_navigator.dart';
 import 'package:csec/homePage/Admin/admin_home_pages.dart';
 import 'package:csec/homePage/Admin/members_list.dart';
 import 'package:csec/homePage/Memebers/atendance.dart';
@@ -8,6 +10,7 @@ import 'package:csec/homePage/Memebers/navigations_buttons.dart';
 import 'package:csec/homePage/Memebers/security.dart';
 import 'package:csec/login_signup/login.dart';
 import 'package:csec/login_signup/registers.dart';
+import 'package:csec/login_signup/reseat.dart';
 import 'package:csec/theming/change.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +57,10 @@ class MyApp extends StatelessWidget {
                     ModalRoute.of(context)?.settings.arguments as String;
                 return NavigatorBottom(uid: argument);
               },
-              "/admin-login": (context) => const AdminHomePages(),
+              "/admin-login": (context) {
+                final arguments = Get.arguments as String;
+                return AdminNavigatorButtons(uid: arguments);
+              },
               "/add-events": (context) => const AddEvents(),
               "/edit-profile": (context) {
                 final arguments = Get.arguments as Map<String, dynamic>;
@@ -72,7 +78,14 @@ class MyApp extends StatelessWidget {
                 return SecurityIssue(
                   user: arguments,
                 );
-              }
+              },
+              "/add-attendance": (context) {
+                final arguments = Get.arguments as User;
+                return AddAttendance(
+                  user: arguments,
+                );
+              },
+              "/reseat": (context) => ResetScreen(),
             },
           );
         }

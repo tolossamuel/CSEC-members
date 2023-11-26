@@ -24,7 +24,7 @@ class PresentAbsentList extends StatelessWidget {
     }
     return Container(
       margin: EdgeInsets.all(10),
-      height: Dimensions.screenHeight * 0.1,
+      height: Dimensions.screenHeight * 0.12,
       width: Dimensions.screenWidth,
       decoration: BoxDecoration(
         color: Colors.transparent,
