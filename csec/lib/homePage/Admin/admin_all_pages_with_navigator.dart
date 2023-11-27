@@ -11,7 +11,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:provider/provider.dart';
 
 class AdminNavigatorButtons extends StatelessWidget {
-  final String uid;
+  final List<dynamic> uid;
   const AdminNavigatorButtons({super.key, required this.uid});
 
   @override
@@ -23,7 +23,7 @@ class AdminNavigatorButtons extends StatelessWidget {
     return PersistentTabView(
       context,
       controller: _controller,
-      screens: _buildScreens(uid),
+      screens: _buildScreens(uid[0], uid[1]),
       items: _navBarsItems(),
       confineInSafeArea: true,
       backgroundColor: Provider.of<ThemeProvider>(context).themeData ==
@@ -59,10 +59,10 @@ class AdminNavigatorButtons extends StatelessWidget {
   }
 }
 
-List<Widget> _buildScreens(String id) {
+List<Widget> _buildScreens(String id, String password) {
   return [
     AdminHomePages(),
-    MembersListViews(),
+    MembersListViews(password: password),
     AttendanceManage(),
     Profile(id: id)
   ];

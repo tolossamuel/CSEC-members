@@ -14,7 +14,8 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 
 class MembersListViews extends StatefulWidget {
-  const MembersListViews({super.key});
+  final String password;
+  const MembersListViews({super.key, required this.password});
 
   @override
   State<MembersListViews> createState() => _MembersListViewsState();
@@ -142,7 +143,7 @@ class _MembersListViewsState extends State<MembersListViews> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigator.pushNamed(context, "/add-events");
-          Get.toNamed("/register");
+          Get.toNamed("/register", arguments: widget.password);
         },
         child: const Icon(Icons.add),
       ),

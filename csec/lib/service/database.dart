@@ -57,7 +57,8 @@ class DatabaseService {
         "Bach": bach,
         "Department": department,
         "SchoolId": schoolId,
-        "Id": id
+        "Id": id,
+        "Password": password
       });
       return "successfully";
     } catch (e) {

@@ -14,7 +14,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+  final String password;
+  const Register({Key? key, required this.password}) : super(key: key);
 
   @override
   State<Register> createState() => _RegisterState();
@@ -352,8 +353,8 @@ class _RegisterState extends State<Register> {
                                   if (password == configPassword) {
                                     if (password.length >= 8) {
                                       try {
-                                        String? _adminUid = FirebaseAuth
-                                            .instance.currentUser?.uid;
+                                        User _adminUid =
+                                            FirebaseAuth.instance.currentUser!;
 
                                         await FirebaseAuth.instance
                                             .createUserWithEmailAndPassword(
@@ -365,14 +366,20 @@ class _RegisterState extends State<Register> {
                                         if (user != null) {
                                           // Use the correct parameter name 'fullname' instead of 'name'
                                           await DatabaseService().userInfoData(
-                                              name,
-                                              selectedUserType,
-                                              _password.text,
-                                              _email.text,
-                                              selectedBach,
-                                              selectedDepartment,
-                                              _shcoolId.text,
-                                              user.uid);
+                                            name,
+                                            selectedUserType,
+                                            _password.text,
+                                            _email.text,
+                                            selectedBach,
+                                            selectedDepartment,
+                                            _shcoolId.text,
+                                            user.uid,
+                                          );
+                                          await FirebaseAuth.instance.signOut();
+                                          await FirebaseAuth.instance
+                                              .signInWithEmailAndPassword(
+                                                  email: _adminUid.email!,
+                                                  password: widget.password);
                                           // ignore: use_build_context_synchronously
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(const SnackBar(
@@ -380,28 +387,6 @@ class _RegisterState extends State<Register> {
                                                 "new user added successfully"),
                                             duration: Duration(seconds: 3),
                                           ));
-
-                                          await FirebaseAuth.instance.signOut();
-                                          User? _adminUser = await FirebaseAuth
-                                              .instance
-                                              .userChanges()
-                                              .firstWhere(
-                                                (user) =>
-                                                    user != null &&
-                                                    user.uid == _adminUid,
-                                                orElse: () => null,
-                                              );
-                                          if (_adminUser != null) {
-                                            // User found, sign in with their details
-                                            await FirebaseAuth.instance
-                                                .signInWithCredential(
-                                              EmailAuthProvider.credential(
-                                                email: user.email!,
-                                                password:
-                                                    'aFakePassword', // Password is not used for Firebase sign-in with an existing user
-                                              ),
-                                            );
-                                          }
 
                                           // Send email only if the user is successfully registered
 

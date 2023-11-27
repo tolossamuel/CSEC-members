@@ -56,6 +56,7 @@ class _EditProfileState extends State<EditProfile> {
     "Architecture",
     "Water",
   ];
+
   late String selectedBach;
   late String selectedDepartment;
   String showError = "";

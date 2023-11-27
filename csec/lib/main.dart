@@ -47,14 +47,20 @@ class MyApp extends StatelessWidget {
             home: const Login(),
             theme: Provider.of<ThemeProvider>(context).themeData,
             routes: {
-              "/register": (context) => const Register(),
+              "/register": (context) {
+                final argument =
+                    ModalRoute.of(context)?.settings.arguments as String;
+                return Register(
+                  password: argument,
+                );
+              },
               "/home": (context) {
                 final argument =
                     ModalRoute.of(context)?.settings.arguments as String;
                 return NavigatorBottom(uid: argument);
               },
               "/admin-login": (context) {
-                final arguments = Get.arguments as String;
+                final arguments = Get.arguments as List<dynamic>;
                 return AdminNavigatorButtons(uid: arguments);
               },
               "/add-events": (context) => const AddEvents(),
